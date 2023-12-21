@@ -7,7 +7,7 @@ import tokenize
 
 import os
 
-def main(file):
+def main(file, output_tsv_file):
 	if not os.path.exists(file):
 		print("\033[91m", end="") # Met les prochains prints en rouge
 		print("Le fichier '"+ file + "' n'existe pas. (404 Not Found :( )")
@@ -38,10 +38,26 @@ def main(file):
 	# 8   ...	10
 	# 9 }		10
 	# 10 ...	-
+	write_tsv(tokens, output_tsv_file)
+
+def write_tsv(tokens, output_tsv_file):
+	header = "line_n\ttoken\ttype_token\tinstruction_n\ttype_instruction\tposition_instruction\tscope_boucle\n"
+	with open(output_tsv_file, 'w') as f:
+		f.write(header)
+		for token in tokens:
+			string = ""
+			for t in token:
+				string += str(t) + "\t"
+			string = string[:-1] # suppression du dernier \t
+			f.write(string + "\n")
 
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
 		print("Il manque le fichier TS.")
-		print("Usage:\n\tpython main.py FICHIER.TS")
+		print("Usage:\n\tpython main.py FICHIER.TSplus (SORTIE.tsv)")
 		sys.exit(1)
-	main(sys.argv[1])
+	if len(sys.argv) > 2:
+		output_tsv_file = sys.argv[2]
+	else:
+		output_tsv_file = ''.join(sys.argv[1].split('.')[:-1]) + '.tsv' # change l'extension en .tsv
+	main(sys.argv[1], output_tsv_file)
