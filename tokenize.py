@@ -46,7 +46,7 @@ def make_tokens(lines: List[str], lines_number: List[int]):
 			line = regex.sub(r"\)", " ) ", line)
 			# Ici, il faut vérifier qu'on a deux expressions à gauche et à droite du ==
 			# puis il faut mettre G, M et D.
-			tokens.extend(check_test(line, line_n))
+			tokens.extend(check_test(line, line_n, instruction_n))
 			instruction_n += 1
 		elif regex.match(r".* = .*", line):
 			type_instruction = "affectation"
@@ -70,7 +70,7 @@ def make_tokens(lines: List[str], lines_number: List[int]):
 				tokens.append([line_n, token, type_token, instruction_n, type_instruction, '-']) # le '-' est la position operation.
 	return tokens
 
-def check_test(expression, line_n):
+def check_test(expression, line_n, instruction_n):
 	"""
 	Fonction qui vérifie qu'on a bien si (expression == expression),
 	et envoie un message d'erreur sinon.
@@ -100,22 +100,24 @@ def check_test(expression, line_n):
 	sortie = []
 	for token in tokens:
 		if token in ("boucle", "D", "G", '#', '}', 'fin', 'I', 'P', '='):
-			print("Mot-clé non autorisé dans un test.", token, "ligne n°", line_n)
+			erreur("Mot-clé non autorisé dans un test.", token=token, line_n=line_n, line=expression)
 		elif regex.match(si_regex, token):
-			print("test", "complexe", token, "-")
+			sortie.append([line_n, token, "complexe", instruction_n, "test", '-'])
 		elif regex.match(variable_regex, token):
-			print("test", "variable", token, position)
+			sortie.append([line_n, token, "variable", instruction_n, "test", position])
 			operations_g_d[position][0].append(token)
 			operations_g_d[position][1].append("variable")
 		elif regex.match(chiffre_regex, token):
-			print("test", "valeur", token, position)
+			sortie.append([line_n, token, "valeur", instruction_n, "test", position])
 			operations_g_d[position][0].append(token)
 			operations_g_d[position][1].append("valeur")
 		elif regex.match(egalite_regex, token):
-			print("test", "operateur", token, 'M')
+			if (position == 'D'):
+				erreur("Un test d'égalité ne peut pas contenir deux fois l'opérateur ==.", token=token, line_n=line_n, line=expression)
+			sortie.append([line_n, token, "operateur", instruction_n, "test", 'M'])
 			position = 'D'
 		elif regex.match(operateur_regex, token):
-			print("test", "operateur", token, position)
+			sortie.append([line_n, token, "operateur", instruction_n, "test", position])
 			operations_g_d[position][0].append(token)
 			operations_g_d[position][1].append("operateur")
 		elif token not in ['(', ')']:
