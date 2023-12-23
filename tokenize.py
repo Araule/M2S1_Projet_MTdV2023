@@ -64,6 +64,8 @@ def make_tokens(lines: List[str], lines_number: List[int]):
 					type_instruction = "MTdV"
 				elif regex.match(r'[0-9]+', token):
 					erreur("Token de type entier non autorisé à cette position", token=token, line=line, line_n=line_n)
+				elif regex.match(r'([a-z]|[A-Z]|_)|([a-z][A-Z][0-9]_)*', token):
+					erreur("Nom de variable non autorisé en dehors d'une affectation ou d'un test", token, line=line, line_n=line_n)
 				else:
 					erreur("Token non autorisé", token=token, line=line, line_n=line_n)
 				instruction_n += 1
@@ -124,84 +126,80 @@ def check_test(expression, line_n):
 	check_operation(operations_g_d["D"][0], operations_g_d["D"][1], line_n, expression)
 	return sortie
 
-#TODO
 def check_affectation(expression, line_n, instruction_n):
-    """
-    Vérifier qu'à gauche on a un seul token de type variable, 
-    et qu'à droite on a une opération valide (appel de check_operation(tokens, types, line_n))
-    et renvoyer les types des tokens etc.
+	"""
+	Vérifier qu'à gauche on a un seul token de type variable, 
+	et qu'à droite on a une opération valide (appel de check_operation(tokens, types, line_n))
+	et renvoyer les types des tokens etc.
 
-    returns: un tableau de tokens, avec pour chaque token les informations [line_n, token, type_token, instruction_n, type_instruction, position_operation], dans cet ordre-là.
-    """
-    variable_regex = r"([a-z]|[A-Z]|_)([a-z]|[A-Z]|[0-9]|_)*"
-    chiffre_regex = r"[0-9]+"
-    affectation_regex = r"="
-    operateur_regex = r"[\+\*]"
-    tokens = regex.findall("[^ ]+", expression)
-    
-    resultat = []
-    left_token = tokens[0].strip()
-    right_tokens = tokens[2:]
+	returns: un tableau de tokens, avec pour chaque token les informations [line_n, token, type_token, instruction_n, type_instruction, position_operation], dans cet ordre-là.
+	"""
+	variable_regex = r"([a-z]|[A-Z]|_)([a-z]|[A-Z]|[0-9]|_)*"
+	chiffre_regex = r"[0-9]+"
+	affectation_regex = r"="
+	operateur_regex = r"[\+\*]"
+	tokens = regex.findall("[^ ]+", expression)
+	
+	resultat = []
+	left_token = tokens[0].strip()
+	right_tokens = tokens[2:]
 
-    # Vérifier qu'on a bien une variable à gauche
-    if left_token  in ("boucle", "si", "D", "G", 'fin', 'I', 'P'):
-        erreur("Côté gauche de l'affectation ne peut pas être un mot-clé.", token=left_token, line_n=line_n, line=expression)
+	# Vérifier qu'on a bien une variable à gauche
+	if left_token  in ("boucle", "si", "D", "G", 'fin', 'I', 'P'):
+		erreur("Côté gauche de l'affectation ne peut pas être un mot-clé.", token=left_token, line_n=line_n, line=expression)
 
-    if not regex.match(variable_regex, left_token):
-        erreur("Côté gauche de l'affectation doit être une variable.", token=left_token, line_n=line_n, line=expression)
+	if not regex.match(variable_regex, left_token):
+		erreur("Côté gauche de l'affectation doit être une variable.", token=left_token, line_n=line_n, line=expression)
 
-    # Vérifier qu'on a bien une affectation
-    if tokens[1] != affectation_regex:
-        erreur("Une affectation doit avoir un seul symbole à gauche du =.", token=tokens[1], line_n=line_n, line=expression)
+	# Vérifier qu'on a bien une affectation
+	if tokens[1] != affectation_regex:
+		erreur("Une affectation doit avoir un seul symbole à gauche du =.", token=tokens[1], line_n=line_n, line=expression)
 
-    types = []    
+	types = []	
 
-    # Construire le tableau de sortie
-    # Parcourir chaque token dans la liste des tokens
-    for i, token in enumerate(tokens):
-        # Initialiser les variables pour le type de token, le type d'instruction et la position de l'opération
-        type_instruction = "type_instruction"
-        position_operation = "position_operation"
+	# Construire le tableau de sortie
+	# Parcourir chaque token dans la liste des tokens
+	for i, token in enumerate(tokens):
+		# Initialiser les variables pour le type de token, le type d'instruction et la position de l'opération
+		type_instruction = "type_instruction"
+		position_operation = "position_operation"
 
-        # Si le token est le premier de la liste, il est considéré comme une variable
-        if i == 0:  # Côté gauche
-            type_token = "variable" 
-        # Si le token correspond à l'expression régulière d'affectation, il est considéré comme une affectation
-        elif i == 1 : # Affectation
-            type_token = "operateur"
-        # Si le token est sur le côté droit de l'affectation
-        elif i > 1:  # Côté droit
-            # Si le token est le suivant sur le côté droit
-            if regex.match(chiffre_regex, token):
-                # Si le token correspond à l'expression régulière d'un chiffre, il est considéré comme une valeur
-                # Sinon, si le token correspond à l'expression régulière d'une variable, il est considéré comme une variable
-                type_token = "valeur"
-                types.append(type_token)
+		# Si le token est le premier de la liste, il est considéré comme une variable
+		if i == 0:  # Côté gauche
+			type_token = "variable" 
+		# Si le token correspond à l'expression régulière d'affectation, il est considéré comme une affectation
+		elif i == 1 : # Affectation
+			type_token = "operateur"
+		# Si le token est sur le côté droit de l'affectation
+		elif i > 1:  # Côté droit
+			# Si le token est le suivant sur le côté droit
+			if regex.match(chiffre_regex, token):
+				# Si le token correspond à l'expression régulière d'un chiffre, il est considéré comme une valeur
+				type_token = "valeur"
+				types.append(type_token)
 
-            elif regex.match(operateur_regex, token):
-                # Si le token correspond à l'expression régulière d'un opérateur, il est considéré comme un opérateur
-                # Sinon, il est considéré comme une erreur
-                type_token = "operateur"
-                types.append(type_token)
+			elif regex.match(operateur_regex, token):
+				# Si le token correspond à l'expression régulière d'un opérateur, il est considéré comme un opérateur
+				type_token = "operateur"
+				types.append(type_token)
 
-            # Si le token est le dernier sur le côté droit
-            elif regex.match(variable_regex, token):
-                # Si le token correspond à l'expression régulière d'un chiffre, il est considéré comme une valeur
-                # Sinon, si le token correspond à l'expression régulière d'une variable, il est considéré comme une variable
-                # Sinon, il est considéré comme une erreur
-                type_token = "variable"
-                types.append(type_token)
-                if token  in ("boucle", "si", "D", "G", 'fin', 'I', 'P'):
-                	erreur("Côté droite de l'affectation ne peut pas contenir un mot-clé.", token=token, line_n=line_n, line=expression)
+			# Si le token est le dernier sur le côté droit
+			elif regex.match(variable_regex, token):
+				# Si le token correspond à l'expression régulière d'une variable, il est considéré comme une variable
+				type_token = "variable"
+				types.append(type_token)
+				if token  in ("boucle", "si", "D", "G", 'fin', 'I', 'P'):
+					# Si le token est un mot clé, c'est une erreur
+					erreur("Côté droite de l'affectation ne peut pas contenir un mot-clé.", token=token, line_n=line_n, line=expression)
+			else:
+				erreur("Token non autorisé dans une affectation.", token, line_n, expression)
 
 	check_operation(right_tokens, types, line_n, expression)
 		
 	# Ajouter le token et ses informations à la liste des résultats
-        resultat.append([line_n, token, type_token, instruction_n, type_instruction, position_operation])
-        print(resultat)
+	resultat.append([line_n, token, type_token, instruction_n, type_instruction, position_operation])
 
-    #print(expression)
-    return resultat
+	return resultat
 
 #TODO
 """
@@ -225,7 +223,6 @@ def check_operation(tokens, types, line_n, line):
 	Si ce n'est pas au bon format, il faut afficher une erreur (cf le power point)
 	Si un objet de type "valeur" est < 0 ou > 29 (tester en convertissant int(token) ), renvoyer une erreur de valeur.
 	"""
-	print(tokens, types)
 	i = 0
 	for token, typen in zip(tokens, types):
 		i += 1
