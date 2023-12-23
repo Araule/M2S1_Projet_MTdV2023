@@ -1,0 +1,14 @@
+% Script basique ++ MTdV+
+x = 0
+x = x + 1
+y = x * 2
+boucle
+
+    si (x == y)
+
+    fin }
+
+    x = y
+
+}
+#
