@@ -5,6 +5,12 @@ from typing import List
 import sys
 
 def clean_lines(text: str):
+	"""
+	Fonction qui nettoie un programme.
+	Le découpe par lignes.
+	Enlève les commentaires.
+	Renvoie les lignes avec leur numéro de lignes associées.
+	"""
 	# split lines
 	text = regex.split(r"\r\n|\n", text)
 	new_text = []
@@ -68,9 +74,8 @@ def make_tokens(lines: List[str], lines_number: List[int]):
 					erreur("Nom de variable non autorisé en dehors d'une affectation ou d'un test", token, line=line, line_n=line_n)
 				else:
 					erreur("Token non autorisé", token=token, line=line, line_n=line_n)
-				instruction_n += 1
 				tokens.append([line_n, token, type_token, instruction_n, type_instruction, '-']) # le '-' est la position operation.
-	print("\033[92mFichier TSplus valide.")
+				instruction_n += 1
 	return tokens
 
 def check_test(expression, line_n, instruction_n):
@@ -126,7 +131,7 @@ def check_test(expression, line_n, instruction_n):
 		elif token not in ['(', ')']:
 			erreur("Token non autorisé dans un test.", token=token, line_n=line_n, line=expression, token_n=i+1)
 	check_operation(operations_g_d["G"][0], operations_g_d["G"][1], line_n, expression, 1)
-	check_operation(operations_g_d["D"][0], operations_g_d["D"][1], line_n, expression, len(operatopns_g_d["G"]) + 1)
+	check_operation(operations_g_d["D"][0], operations_g_d["D"][1], line_n, expression, len(operations_g_d["G"]) + 1)
 	return sortie
 
 def check_affectation(expression, line_n, instruction_n):
@@ -253,6 +258,85 @@ def check_operation(tokens, types, line_n, line, len_left=0):
 		# sinon il manque sans doute un 'v' final.
 		erreur("Une opération ne peut pas se terminer par un opérateur.", tokens[-1], line_n = line_n, line = line)
 
+
+def check_structure(tokens, stack=[], old_tokens=[]):
+	"""
+	La fonction check_structure va vérifier la bonne correspondance entre
+	les mots-clé si, boucle, fin, } et l'utilisation de # (fin du programme).
+
+	Params:
+		tokens: la liste des tokens (avec toutes leurs informations, qui a été générée par la fonction make_tokens)
+		stack: les tokens de type boucle, si (0), si (1) et si, qui s'empilent et se dépilent au fur et à mesure qu'on les rencontre et qu'on rencontre un }.
+		old_tokens: les tokens déjà traités.
+	"""
+	token = next_token(tokens, old_tokens)
+	if token[2] in ('boucle', 'si (0)', 'si (1)', 'si'):
+		# on empile
+		if token[2] == 'boucle':
+			token.append(False) # Boucle n'a pas encore rencontré de fin et n'a pas encore été fermé.
+		stack.append(token)
+		return check_structure(tokens, stack, old_tokens)
+	elif token[2] == '}':
+		# on dépile et on vérifie tout
+		# vérifie si il n'y a pas un } en trop.
+		if len(stack) == 0:
+			# il y a un } en trop car il n'y a pas de boucle ou si correspondant
+			erreur("} rencontré hors d'une boucle ou d'un si", token=token[2], line_n=token[1])
+		corresp = stack.pop()
+		if corresp[2] == 'boucle':
+			if not corresp[7]: # Si il n'a pas rencontré le mot-clé fin pour cette boucle
+				erreur("Pas de fin dans la boucle.", token=corresp[2], line_n=corresp[1])
+			# Ajout de la 7e colonne: scope_boucle
+			# S'il n'y a plus de boucle dans stack, alors on est à la boucle la plus haute.
+			# Les variables qui n'apparaissent plus après cette boucle cessent d'exister.
+			# On remplace la septième colonne par instruction_n suivant l'accolade.
+			if not 'boucle' in [s[2] for s in stack]:
+				first = corresp[0]
+				last = token[0]
+				# Entre first et last, il s'agit de toutes les tokens dans la boucle.
+				scope_boucle = token[4] + 1 # instruction_n
+				for t in old_tokens[first-1:last+1]:
+					if len(t) == 7:
+						t.append(scope_boucle)
+					elif len(t) == 8:
+						t[7] = scope_boucle
+
+		# s'il y a encore une boucle dans la stack.
+		# fin de la récursivité ( pas d'appel à check_structure)
+		return check_structure(tokens, stack, old_tokens)
+	elif token[2] == 'fin':
+		if not 'boucle' in [s[2] for s in stack]: # Si il n'y a pas de boucle dans la stack
+			warning("Mot-clé 'fin' trouvé hors d'une boucle, le programme pourrait s'arrêter avant la fin.", token=token[2], line_n=token[1])
+		else:
+			# trouve les occurrences de boucle et indique qu'il y a bien une fin dans une 7e colonne
+			for s in stack:
+				if s[2] == 'boucle':
+					s[7] = True # Il y a une fin dans les boucles de la pile.
+		return check_structure(tokens, stack, old_tokens)
+	elif token[2] == '#':
+		if len(stack) > 0:
+			not_closed = stack.pop()
+			erreur("Pas d'accolade fermante après un" + ("e boucle" if not_closed[2]=='boucle' else " si"), token=not_closed[2], line_n=not_closed[1])
+		elif len(tokens) > 0:
+			token = next_token(tokens, old_tokens)
+			erreur("Tokens trouvés après le mot-clé #.", token=token[2], line_n=token[1])
+		else:
+			# fin du programme.
+			print("\033[92mFichier TSplus valide.") # Affichage en vert
+			print("\033[0m", end="") # Remet la couleur par défaut
+			return old_tokens # On return le résultat :D
+	elif len(tokens) > 0:
+		return check_structure(tokens, stack, old_tokens)
+	else:
+		# Si il n'y a plus de tokens, ce n'est pas normal car on sait que len(tokens) == 0 mais qu'on n'a pas rencontré #.
+		last_token = old_tokens[-1]
+		erreur("Programme terminé sans avoir rencontré #.", token=last_token[2], line_n=last_token[1])
+
+def next_token(tokens, old_tokens):
+	token = tokens.pop(0) # On dépile le prochain token
+	old_tokens.append(token) # On empile les tokens déjà traités
+	return token
+
 def erreur(erreur_str, token="", line_n="", line="", token_n=""):
 	print("\033[91m", end="") # Met les prochains prints en rouge
 	print(erreur_str)
@@ -266,7 +350,7 @@ def erreur(erreur_str, token="", line_n="", line="", token_n=""):
 		print("sur le token '" + str(token) + "'")
 	if token_n:
 		print("à la position "+str(token_n) + ".")
-	print("\033[0m", end="") # Met les prochains prints en jaune
+	print("\033[0m", end="") # Remet la couleur par défaut
 	sys.exit(1)
 
 def warning(warning_str, token="", line_n="", line=""):
@@ -279,4 +363,4 @@ def warning(warning_str, token="", line_n="", line=""):
 	if token:
 		print("Sur le token '" + str(token) + "'")
 	# pas de exit, un warning n'est qu'un avertissement.
-	print("\033[0m", end="") # Met les prochains prints en jaune
+	print("\033[0m", end="") # Remet la couleur par défaut

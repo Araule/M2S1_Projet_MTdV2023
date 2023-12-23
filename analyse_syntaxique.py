@@ -21,33 +21,23 @@ def main(file, output_tsv_file):
 		program = f.read()
 	lines, lines_number = tokenize.clean_lines(program)
 	tokens = tokenize.make_tokens(lines, lines_number)
-	# TODO : faire une recherche récursive dans les tokens pour vérifier les indentations
-	# ainsi que d'écrire la dernière colonne du fichier TSV.
-	# Cette colonne correspond au token qui est après le } de la Boucle la plus externe, ou un - si on n'est pas dans une boucle.
-	# Cette colonne sera utile pour le Garbage Collector (certaines variables disparaissent en sortant des boucles si elles n'apparaissent plus après)
-	# par exemple:
-	# 1 boucle	7		
-	# 2   boucle	7
-	# 3     ...	7
-	# 4     ...	7
-	# 5   }		7
-	# 6 }		7
-	# 7 boucle	10
-	# 8   ...	10
-	# 9 }		10
-	# 10 ...	-
+	for i, t in enumerate(tokens): # ajout du numéro du token
+		t.insert(0, i+1)
+
+	# vérification de la profondeur et ajout de la dernière colonne (scope_boucle)
+	tokens = tokenize.check_structure(tokens)
 	write_tsv(tokens, output_tsv_file)
 
 def write_tsv(tokens, output_tsv_file):
-	header = "line_n\ttoken\ttype_token\tinstruction_n\ttype_instruction\tposition_instruction\n"
-	# Quand scope_boucle sera calculé:
-	#header = "line_n\ttoken\ttype_token\tinstruction_n\ttype_instruction\tposition_instruction\tscope_boucle\n"
+	header = "token_n\tline_n\ttoken\ttype_token\tinstruction_n\ttype_instruction\tposition_instruction\tscope_boucle\n"
 	with open(output_tsv_file, 'w') as f:
 		f.write(header)
 		for token in tokens:
 			string = ""
 			for t in token:
 				string += str(t) + "\t"
+			if len(token) == 7:
+				string += "-\t" # scope_boucle vide
 			string = string[:-1] # suppression du dernier \t
 			f.write(string + "\n")
 
