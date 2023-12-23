@@ -146,6 +146,7 @@ def check_affectation(expression, line_n, instruction_n):
     # Vérifier qu'on a bien une variable à gauche
     if left_token  in ("boucle", "si", "D", "G", 'fin', 'I', 'P'):
         erreur("Côté gauche de l'affectation ne peut pas être un mot-clé.", token=left_token, line_n=line_n, line=expression)
+
     if not regex.match(variable_regex, left_token):
         erreur("Côté gauche de l'affectation doit être une variable.", token=left_token, line_n=line_n, line=expression)
 
@@ -153,14 +154,7 @@ def check_affectation(expression, line_n, instruction_n):
     if tokens[1] != affectation_regex:
         erreur("Une affectation doit avoir un seul symbole à gauche du =.", token=tokens[1], line_n=line_n, line=expression)
 
-    # Vérifier qu'on a bien une opération valide à droite
-    for token in right_tokens:
-        if not regex.match(variable_regex, token):
-            erreur("Côté droit de l'affectation doit être une opération valide.", token=token, line_n=line_n, line=expression)
-        elif not regex.match(operateur_regex, token):
-            erreur("Côté droit de l'affectation doit être une opération valide.", token=token, line_n=line_n, line=expression)
-        elif not regex.match(chiffre_regex, token):
-            erreur("Côté droit de l'affectation doit être une opération valide.", token=token, line_n=line_n, line=expression)
+    types = []    
 
     # Construire le tableau de sortie
     # Parcourir chaque token dans la liste des tokens
@@ -173,29 +167,39 @@ def check_affectation(expression, line_n, instruction_n):
         if i == 0:  # Côté gauche
             type_token = "variable" 
         # Si le token correspond à l'expression régulière d'affectation, il est considéré comme une affectation
-        elif i == affectation_regex: # Affectation
-            type_token = "affectation"
+        elif i == 1 : # Affectation
+            type_token = "operateur"
         # Si le token est sur le côté droit de l'affectation
-        elif i == right_tokens[2]:  # Côté droit
+        elif i > 1:  # Côté droit
             # Si le token est le suivant sur le côté droit
-            if i == right_tokens + 1:
+            if regex.match(chiffre_regex, token):
                 # Si le token correspond à l'expression régulière d'un chiffre, il est considéré comme une valeur
                 # Sinon, si le token correspond à l'expression régulière d'une variable, il est considéré comme une variable
-                type_token = "valeur" if regex.match(chiffre_regex, token) else "variable" if regex.match(variable_regex, token) else "erreur"
-            if i == right_tokens + 2:
+                type_token = "valeur"
+                types.append(type_token)
+
+            elif regex.match(operateur_regex, token):
                 # Si le token correspond à l'expression régulière d'un opérateur, il est considéré comme un opérateur
                 # Sinon, il est considéré comme une erreur
-                type_token = "operateur" if regex.match(operateur_regex, token) else "erreur"
+                type_token = "operateur"
+                types.append(type_token)
+
             # Si le token est le dernier sur le côté droit
-            elif i == right_tokens - 1:
+            elif regex.match(variable_regex, token):
                 # Si le token correspond à l'expression régulière d'un chiffre, il est considéré comme une valeur
                 # Sinon, si le token correspond à l'expression régulière d'une variable, il est considéré comme une variable
                 # Sinon, il est considéré comme une erreur
-                type_token = "valeur" if regex.match(chiffre_regex, token) else "variable" if regex.match(variable_regex, token) else "erreur"
-                i += 1
-        # Ajouter le token et ses informations à la liste des résultats
+                type_token = "variable"
+                types.append(type_token)
+                if token  in ("boucle", "si", "D", "G", 'fin', 'I', 'P'):
+                	erreur("Côté droite de l'affectation ne peut pas contenir un mot-clé.", token=token, line_n=line_n, line=expression)
+
+	check_operation(right_tokens, types, line_n, expression)
+		
+	# Ajouter le token et ses informations à la liste des résultats
         resultat.append([line_n, token, type_token, instruction_n, type_instruction, position_operation])
-    
+        print(resultat)
+
     #print(expression)
     return resultat
 
@@ -212,8 +216,7 @@ def check_operation(tokens, types, line_n, line):
 	Fonction qui ne fait rien si l'opération est valide.
 	Sinon, elle affiche une erreur avec la fonction erreur.
 	TODO
-	Vérifie qu'on a bien une suite de types qui fasse v o v o v o v, et que les o sont soit * soit +
-	avec: v = variable ou valeur, o = operateur.
+	Vérifie qu'on a bien une suite de types qui fasse v o v o v o v, et que les o sont soit * soit	avec: v = variable ou valeur, o = operateur.
 
 	par exemple
 	- autorisé : v tout seul , v o v, v o v o v, v o v (o v)*
