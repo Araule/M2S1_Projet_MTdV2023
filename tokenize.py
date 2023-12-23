@@ -144,12 +144,14 @@ def check_affectation(expression, line_n, instruction_n):
     right_tokens = tokens[2:]
 
     # Vérifier qu'on a bien une variable à gauche
+    if left_token  in ("boucle", "si", "D", "G", 'fin', 'I', 'P'):
+        erreur("Côté gauche de l'affectation ne peut pas être un mot-clé.", token=left_token, line_n=line_n, line=expression)
     if not regex.match(variable_regex, left_token):
         erreur("Côté gauche de l'affectation doit être une variable.", token=left_token, line_n=line_n, line=expression)
 
     # Vérifier qu'on a bien une affectation
     if tokens[1] != affectation_regex:
-        erreur("Une affectation doit contenir un seul signe égal", token=tokens[1], line_n=line_n, line=expression)
+        erreur("Une affectation doit avoir un seul symbole à gauche du =.", token=tokens[1], line_n=line_n, line=expression)
 
     # Vérifier qu'on a bien une opération valide à droite
     for token in right_tokens:
@@ -190,13 +192,12 @@ def check_affectation(expression, line_n, instruction_n):
                 # Sinon, si le token correspond à l'expression régulière d'une variable, il est considéré comme une variable
                 # Sinon, il est considéré comme une erreur
                 type_token = "valeur" if regex.match(chiffre_regex, token) else "variable" if regex.match(variable_regex, token) else "erreur"
-        
+                i += 1
         # Ajouter le token et ses informations à la liste des résultats
         resultat.append([line_n, token, type_token, instruction_n, type_instruction, position_operation])
     
     #print(expression)
     return resultat
-#TODO --> pour l'instant ça ne marche pas 
 
 #TODO
 """
