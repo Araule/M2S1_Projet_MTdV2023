@@ -3,7 +3,7 @@
 
 import sys
 
-import tokenize
+import tokenize_MTdVplus as tokenize
 
 import os
 
@@ -20,9 +20,7 @@ def main(file, output_tsv_file):
 	with open(file, 'r', encoding='ISO-8859-1') as f:
 		program = f.read()
 	lines, lines_number = tokenize.clean_lines(program)
-	print(lines)
 	tokens = tokenize.make_tokens(lines, lines_number)
-	print(tokens)
 	# TODO : faire une recherche récursive dans les tokens pour vérifier les indentations
 	# ainsi que d'écrire la dernière colonne du fichier TSV.
 	# Cette colonne correspond au token qui est après le } de la Boucle la plus externe, ou un - si on n'est pas dans une boucle.
@@ -41,7 +39,9 @@ def main(file, output_tsv_file):
 	write_tsv(tokens, output_tsv_file)
 
 def write_tsv(tokens, output_tsv_file):
-	header = "line_n\ttoken\ttype_token\tinstruction_n\ttype_instruction\tposition_instruction\tscope_boucle\n"
+	header = "line_n\ttoken\ttype_token\tinstruction_n\ttype_instruction\tposition_instruction\n"
+	# Quand scope_boucle sera calculé:
+	#header = "line_n\ttoken\ttype_token\tinstruction_n\ttype_instruction\tposition_instruction\tscope_boucle\n"
 	with open(output_tsv_file, 'w') as f:
 		f.write(header)
 		for token in tokens:

@@ -37,7 +37,7 @@ def make_tokens(lines: List[str], lines_number: List[int]):
 	Coupe les lignes en tokens (token, line_number, instruction_number).
 	"""
 	tokens = []
-	instruction_n = 0
+	instruction_n = 1
 	assert(len(lines) == len(lines_number))
 	for line, line_n in zip(lines, lines_number):
 		if regex.match(r".*==.*", line):
@@ -59,7 +59,7 @@ def make_tokens(lines: List[str], lines_number: List[int]):
 					type_token = "trivial"
 					type_instruction = "MTdV"
 				elif token in ('G', 'D', '0', '1'):
-					warning()
+					warning("Mot-clé {m} rencontré. Cela pourrait corrompre la mémoire du programme.".format(m=token), token=token, line_n=line_n, line=line)
 					type_token = "memoire"
 					type_instruction = "MTdV"
 				elif regex.match(r'[0-9]+', token):
@@ -88,11 +88,11 @@ def check_test(expression, line_n, instruction_n):
 
 	# Vérification de la structure externe du test : si ( ... )
 	if tokens[0] != "si":
-		erreur("Un test doit commencer par le mot-clé si.", token=tokens[0], line_n=line_n, line=expression)
+		erreur("Un test doit commencer par le mot-clé si.\n\t syntaxe: si (operation1 test operation2)", token=tokens[0], line_n=line_n, line=expression)
 	elif tokens[1] != "(":
-		erreur("Un test doit être entouré par des parenthèses.", token=tokens[1], line_n=line_n, line=expression)
+		erreur("Un test doit être entouré par des parenthèses.\n\t syntaxe: si (operation1 test operation2)", token=tokens[1], line_n=line_n, line=expression)
 	elif tokens[-1] != ")":
-		erreur("Un test doit être entouré par des parenthèses.", token=tokens[-1], line_n=line_n, line=expression)
+		erreur("Un test doit être entouré par des parenthèses.\n\t syntaxe: si (operation1 test operation2)", token=tokens[-1], line_n=line_n, line=expression)
 	position = 'G'
 	operations_g_d = {'G': [[],[]], 'D': [[],[]]} # ['G'][0] => les tokens de gauche. ['D'][0] => les tokens de droite.
 	# ['G'][1] => les types des tokens de gauche. ['D'][1] => les types des tokens de droite.
@@ -123,7 +123,7 @@ def check_test(expression, line_n, instruction_n):
 			operations_g_d[position][0].append(token)
 			operations_g_d[position][1].append("operateur")
 		elif token not in ['(', ')']:
-			erreur("Token non autorisé dans un test", token=token, line_n=line_n, line=expression)
+			erreur("Token non autorisé dans un test.", token=token, line_n=line_n, line=expression)
 	check_operation(operations_g_d["G"][0], operations_g_d["G"][1], line_n, expression)
 	check_operation(operations_g_d["D"][0], operations_g_d["D"][1], line_n, expression)
 	return sortie
@@ -194,11 +194,11 @@ def check_affectation(expression, line_n, instruction_n):
 					erreur("Côté droite de l'affectation ne peut pas contenir un mot-clé.", token=token, line_n=line_n, line=expression)
 			else:
 				erreur("Token non autorisé dans une affectation.", token, line_n, expression)
+		# Ajouter le token et ses informations à la liste des résultats
+		resultat.append([line_n, token, type_token, instruction_n, "affectation", position_operation])
 
 	check_operation(right_tokens, types, line_n, expression)
 		
-	# Ajouter le token et ses informations à la liste des résultats
-	resultat.append([line_n, token, type_token, instruction_n, "affectation", position_operation])
 
 	return resultat
 
@@ -224,37 +224,57 @@ def check_operation(tokens, types, line_n, line):
 	Si ce n'est pas au bon format, il faut afficher une erreur (cf le power point)
 	Si un objet de type "valeur" est < 0 ou > 29 (tester en convertissant int(token) ), renvoyer une erreur de valeur.
 	"""
+	operateur_regex = r"[\+\*]"
+	assert len(tokens) == len(types)
+	if len(tokens) == 0:
+		erreur("Test ou affectation incomplète.", line_n=line_n, line=line)
 	i = 0
 	for token, typen in zip(tokens, types):
-		i += 1
-		continue
 		# Boucle sur les tokens et les types en même temps
 		# on vérifie ici qu'on a bien v sur les tokens impairs, o sur les pairs.
 		# affichage de l'erreur d'opération:
 		# erreur("Opération invalide", token=token, line_n = line_n, line = line)
-	# en sortant de la boucle, il faut que i est bien un chiffre impair; sinon il manque
-	# sans doute un 'v' final.
-	# affichage de l'erreur d'opération sur le dernier token de l'opération:
-	# erreur("Opération invalide", token=tokens[-1], line_n = line_n, line = line)
+		i += 1
+		if i % 2 == 0:
+			if typen != "operateur":
+				erreur("Opérateur attendu (+ ou *) dans l'opération.\nOpération binaire incomplète.", token, line_n=line_n, line=line)
+			elif not regex.search(operateur_regex, token):
+				# Si l'opérateur n'est pas un opérateur valide (pas d'opérateur d'affectation ou de test)
+				erreur("Opérateur invalide dans une opération.", token, line_n=line_n, line=line)
+		elif i % 2 != 0:
+			if typen != "variable" and typen != "valeur":
+				erreur("Valeur ou variable attendue dans l'opération.\nOpération binaire incomplète.", token, line_n=line_n, line=line)
+				# TODO afficher un message plus précis
+			elif typen == "valeur":
+				if int(token) < 0 or int(token) > 29:
+					erreur("Entier dépassant la limite autorisée.\n\tValeurs autorisées: [0-29]", token=token, line_n=line_n, line=line)
+	if i % 2 == 0:
+		# en sortant de la boucle, il faut que i est bien un chiffre impair
+		# sinon il manque sans doute un 'v' final.
+		erreur("Une opération ne peut pas se terminer par un opérateur.", tokens[-1], line_n = line_n, line = line)
 
 def erreur(erreur_str, token="", line_n="", line=""):
 	print("\033[91m", end="") # Met les prochains prints en rouge
 	print(erreur_str)
-	if line_n != "":
-		print("A la ligne n°" + str(line_n))
-	if line != "":
+	if line_n or line or token:
+		print("Erreur rencontrée ", end="")
+	if line_n:
+		print("à la ligne " + str(line_n))
+	if line:
 		print("\t" + line)
-	if token != "":
-		print("Sur le token:" + str(token))
+	if token:
+		print("sur le token '" + str(token) + "'")
+	print("\033[0m", end="") # Met les prochains prints en jaune
 	sys.exit(1)
 
 def warning(warning_str, token="", line_n="", line=""):
-	print("\031[91m", end="") # Met les prochains prints en jaune
-	print(erreur_str)
-	if line_n != "":
-		print("A la ligne n°" + str(line_n))
-	if line != "":
+	print("\033[93m", end="") # Met les prochains prints en jaune
+	print(warning_str)
+	if line_n:
+		print("A la ligne " + str(line_n))
+	if line:
 		print("\t" + line)
-	if token != "":
-		print("Sur le token:" + str(token))
+	if token:
+		print("Sur le token '" + str(token) + "'")
 	# pas de exit, un warning n'est qu'un avertissement.
+	print("\033[0m", end="") # Met les prochains prints en jaune
