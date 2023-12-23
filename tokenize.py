@@ -162,18 +162,17 @@ def check_affectation(expression, line_n, instruction_n):
 	# Construire le tableau de sortie
 	# Parcourir chaque token dans la liste des tokens
 	for i, token in enumerate(tokens):
-		# Initialiser les variables pour le type de token, le type d'instruction et la position de l'opération
-		type_instruction = "type_instruction"
-		position_operation = "position_operation"
-
 		# Si le token est le premier de la liste, il est considéré comme une variable
 		if i == 0:  # Côté gauche
 			type_token = "variable" 
+			position_operation = 'G'
 		# Si le token correspond à l'expression régulière d'affectation, il est considéré comme une affectation
 		elif i == 1 : # Affectation
 			type_token = "operateur"
+			position_operation = 'M'
 		# Si le token est sur le côté droit de l'affectation
 		elif i > 1:  # Côté droit
+			position_operation = 'D'
 			# Si le token est le suivant sur le côté droit
 			if regex.match(chiffre_regex, token):
 				# Si le token correspond à l'expression régulière d'un chiffre, il est considéré comme une valeur
@@ -199,7 +198,7 @@ def check_affectation(expression, line_n, instruction_n):
 	check_operation(right_tokens, types, line_n, expression)
 		
 	# Ajouter le token et ses informations à la liste des résultats
-	resultat.append([line_n, token, type_token, instruction_n, type_instruction, position_operation])
+	resultat.append([line_n, token, type_token, instruction_n, "affectation", position_operation])
 
 	return resultat
 
