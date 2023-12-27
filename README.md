@@ -2,7 +2,7 @@
 
 Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de l'INALCO. Le but de ce projet est de réaliser un complilateur qui transforme les programmes MTdV+ en programme MTdV classique.
 
-## Groupe 1: 
+## Groupe 1
 
 ### Tâches
 - création d'un analyseur syntaxique de la MTdV+
