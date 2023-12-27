@@ -93,6 +93,3 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 > Bla
 > 
 > Bla
-> <img src="/../page/images/florian.jpg" width="100" height="1OO" />
-> **Florian XXX** \
-> Bla Bla Bla
