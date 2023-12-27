@@ -5,7 +5,8 @@
 	Ce que l'on peut ecrire sur le terminal depuis le dossier Projet_MTdV2023 :
     $ python groupe1_AnalyseSyntaxique.py
 	
- 	conseil Laura 1 : dans ce commentaire, faire le résumé du fichier à rajouter pour savoir ce qu'il fait 
+ 	conseil Laura 1 : dans ce commentaire, il serait bien de rajouter un résumé du fichier à rajouter pour savoir ce qu'il fait
+	conseil Laura 2 : Le fichier TSV est au format ASCII. Serait-il possible de le print au format utf-8 pour éviter tout problème
 """
 
 import sys

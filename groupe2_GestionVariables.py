@@ -10,7 +10,7 @@ import sys
 
 class GestionnaireVariables:
 
- 
+
     def __init__(self):
         """ initialisation du gestionnaire de noms de variable
         """
@@ -119,22 +119,3 @@ class GestionnaireVariables:
         else:
             # sinon
             return False
-    
-        
-# Exemple avec la variable "a"
-
-variables = GestionnaireVariables()
-variables.getVariables()
-variables.addVariable("a")
-variables.getVariables()
-variables.updateAdresse("a")
-variables.addVariable("b")
-variables.getVariables()
-variables.deleteVariable("a")  
-variables.getVariables()
-
-for v in ["a", "b"] :
-    if variables.doesVariableExist(v) :
-        print(f"la variable {v} existe.")
-    else :
-        print(f"la variable {v} n'existe pas.")

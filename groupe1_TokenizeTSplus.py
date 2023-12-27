@@ -1,8 +1,8 @@
 #!/bin/python3
 # -*- coding: utf-8 -*-
 
-""" 
-	conseil Laura 1 : dans ce commentaire, faire le résumé du fichier à rajouter pour savoir ce qu'il fait et par quel fichier python il est appelé
+"""
+	conseil Laura 1 : dans ce commentaire, il serait bien de rajouter un résumé du fichier à rajouter pour savoir ce qu'il fait et par quel fichier python il est appelé
 	conseil Laura 2 : en dessous, dans les fonctions, rajouter les informations (type, résumé, ect..)
 	Laura peut-être bug trouvé 1 : 
 				=> ce qui est écrit sur mon terminal
@@ -284,7 +284,7 @@ def check_operation(tokens: list, types, line_n, line, len_left=0):
 	""" 
  	La fonction ne fait rien si l'opération est valide.
 	Sinon, elle affiche une erreur avec la fonction erreur.
- 
+
 	Vérifie qu'on a bien une suite de types qui fasse v o v o v o v, 
  	et que les o sont soit * soit avec: v = variable ou valeur, o = operateur.
 
