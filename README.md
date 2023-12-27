@@ -4,7 +4,7 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ## Groupe 1: création d'un analyseur syntaxique de la MTdV+
 
-> <img src="/../page/images/alice.png" width="100" height="1OO" />
+> <img src="/../page/images/alice.jpg" width="100" height="1OO" />
 > **Alice XXX** \
 > Bla Bla Bla
 
@@ -22,7 +22,11 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ## Groupe 2 : création d'un gestionnaire des noms de variables
 
-<img src="https://github.com/Araule/Projet_MTdV2023/blob/44adec2e37016ece3b0ca7ecf2bea5d69eae7378/images/laura.jpg" width=100px height=1OOpx />
+
+<img src="https://github.com/Araule/Projet_MTdV2023/blob/page/images/laura.jpg" width=100px height=1OOpx>
+
+
+<img src="https://github.com/Araule/Projet_MTdV2023/blob/page/images/laura.jpg">
 
 > **Laura Darenne** \
 > Bla Bla Bla
