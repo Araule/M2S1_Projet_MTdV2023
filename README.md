@@ -2,7 +2,13 @@
 
 Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de l'INALCO. Le but de ce projet est de réaliser un complilateur qui transforme les programmes MTdV+ en programme MTdV classique.
 
-### Groupe 1: création d'un analyseur syntaxique de la MTdV+
+## Groupe 1: 
+
+#### Tâches
+- création d'un analyseur syntaxique de la MTdV+
+- gestion de l'intégration globales
+
+#### Membres
 
 <img src="/../page/images/alice.jpg" width=100px> &nbsp; &nbsp; **Alice XXX**
 > Bla
@@ -19,7 +25,13 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 > 
 > Bla
 
-### Groupe 2 : création d'un gestionnaire des noms de variables
+## Groupe 2
+
+#### Tâches
+- création d'un gestionnaire des noms de variables
+- gestion de la doc et du reporting
+
+#### Membres
 
 <img src="/../page/images/laura.jpg" width=100px> &nbsp; &nbsp; **Laura Darenne**
 > Bla
@@ -31,7 +43,13 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 >
 > Bla 
 
-### Groupe 3 : création d'un allocataire et gestionnaire de mémoire
+## Groupe 3
+
+#### Tâches
+- création d'un allocataire et gestionnaire de mémoire
+- gestion du testing des scripts
+
+#### Membres
 
 <img src="/../page/images/tifanny.jpg" width=100px> &nbsp; &nbsp; **Tifanny XXX**
 > Bla
@@ -48,26 +66,33 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 > 
 > Bla
 
-### Groupe 4 : création d'un générateur de code MTdV à partir de la MTdV+
+### Groupe 4
 
-> <img src="/../page/images/agathe.png" width="100" height="1OO" />
-> **Agathe XXX** \
-> Bla Bla Bla
+#### Tâches
+- création d'un générateur de code MTdV à partir de la MTdV+
+- gestion de projet
 
-<br>
+#### Membres
 
-> <img src="/../page/images/sandra.jpg" width="100" height="1OO" />
-> **Sandra XXX** \
-> Bla Bla Bla
+<img src="/../page/images/agathe.jpg" width=100px> &nbsp; &nbsp; **Agathe XXX**
+> Bla
+> 
+> Bla
 
-<br>
+<img src="/../page/images/sandra.jpg" width=100px> &nbsp; &nbsp; **Sandra XXX**
+> Bla
+> 
+> Bla
 
-> <img src="/../page/images/valentina.jpg" width="100" height="1OO" />
-> **Valentina XXX** \
-> Bla Bla Bla
+<img src="/../page/images/valentina.jpg" width=100px> &nbsp; &nbsp; **Valentina XXX**
+> Bla
+> 
+> Bla
 
-<br>
-
+<img src="/../page/images/florian.jpg" width=100px> &nbsp; &nbsp; **Florian XXX**
+> Bla
+> 
+> Bla
 > <img src="/../page/images/florian.jpg" width="100" height="1OO" />
 > **Florian XXX** \
 > Bla Bla Bla
