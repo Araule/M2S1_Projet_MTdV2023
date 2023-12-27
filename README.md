@@ -4,34 +4,32 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ## Groupe 1: création d'un analyseur syntaxique de la MTdV+
 
-> <img src="/../page/images/alice.jpg" width=100px>   **Alice XXX**
-> Bla Bla Bla
-> Et encore Bla 
+<img src="/../page/images/alice.jpg" width=100px> &nbsp; &nbsp; **Alice XXX**
+> Bla
+> Bla
+> Bla
 
-<br>
+<img src="/../page/images/kenza.jpg" width=100px> &nbsp; &nbsp; **Kenza XXX**
+> Bla
+> Bla
+> Bla
 
-> <img src="/../page/images/kenza.jpg" width=100px>   **Kenza XXX**
-> Bla Bla Bla
-> Et encore Bla
-
-<br>
-
-> <img src="/../page/images/liza.jpg" width=100px>   **Liza XXX**
-> Bla Bla Bla
-> Et encore Bla
+<img src="/../page/images/liza.jpg" width=100px> &nbsp; &nbsp; **Liza XXX**
+> Bla
+> Bla
+> Bla
 
 ## Groupe 2 : création d'un gestionnaire des noms de variables
 
-<img src="/../page/images/laura.jpg" width=100px>   **Laura Darenne**
+<img src="/../page/images/laura.jpg" width=100px> &nbsp; &nbsp; **Laura Darenne**
 > Bla
 > Bla
 > Bla
 
-<br>
-
-> <img src="/../page/images/shami.jpg" width="100" height="1OO" />
-> **Shami XXX** \
-> Bla Bla Bla 
+<img src="/../page/images/shami.jpg" width=100px> &nbsp; &nbsp; **Shami XXX**
+> Bla
+> Bla
+> Bla 
 
 ## Groupe 3 : création d'un allocataire et gestionnaire de mémoire
 
