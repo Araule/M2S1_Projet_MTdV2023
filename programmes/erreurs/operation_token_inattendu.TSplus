@@ -1,0 +1,6 @@
+% une opération ne peut contenir que des opérateurs, valeurs et variables.
+b = 0
+x = 3 + b
+si (# x == b + #)
+}
+#
