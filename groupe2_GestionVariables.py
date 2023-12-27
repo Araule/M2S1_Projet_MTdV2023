@@ -10,12 +10,10 @@ import sys
 
 class GestionnaireVariables:
 
-
     def __init__(self):
         """ initialisation du gestionnaire de noms de variable
         """
         self.variables = {}
-
 
     def addVariable(self, nom: str):
         """ ajout de la variable dans le gestionnaire
@@ -34,7 +32,6 @@ class GestionnaireVariables:
             # sinon, fin du programme
             print("\033[91mLe nom de variable {} n'est pas autorisé.\033[0m".format(nom)) # affiche en rouge
             sys.exit(1)
-
 
     def updateAdresse(self, nom: str):
         """ mise à jour de l'adresse de la variable dans le gestionnaire
@@ -55,7 +52,6 @@ class GestionnaireVariables:
             print("La variable n'existe pas dans le gestionnaire.\033[0m")
             sys.exit(1)
 
-
     def deleteVariable(self, nom: str):
         """ suppression de la variable dans le gestionnaire
 
@@ -72,7 +68,6 @@ class GestionnaireVariables:
             print("La variable n'existe pas dans le gestionnaire.\033[00m")
             sys.exit(1)
 
-
     def getVariables(self):
         """ affichage de toutes les variables du gestionnaire
         """
@@ -81,7 +76,6 @@ class GestionnaireVariables:
                 print(f"{nom}: {adresse}")
         else :
             print("\033[92mLe gestionnaire de noms de variable est actuellement vide.\033[00m")
-
 
     def getAdresse(self, nom: str) -> int:
         """ retourne l'adresse de la variable
@@ -101,7 +95,6 @@ class GestionnaireVariables:
             print("La variable n'existe pas dans le gestionnaire ")
             print("\033[0m", end="") # remet la couleur par défaut
             sys.exit(1)
-
 
     def doesVariableExist(self, nom: str) -> bool:
         """ vérifie si une variable se trouve dans le gestionnaire
