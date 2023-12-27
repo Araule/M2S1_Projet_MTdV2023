@@ -1,0 +1,5 @@
+token_n	line_n	token	type_token	instruction_n	type_instruction	position_instruction	scope_boucle
+1	1	x	variable	1	affectation	G	-
+2	1	=	operateur	1	affectation	M	-
+3	1	0	valeur	1	affectation	D	-
+4	2	#	trivial	2	MTdV	-	-

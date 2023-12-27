@@ -1,10 +1,15 @@
 #!/bin/python3
 # -*- coding: utf-8 -*-
 
+""" 
+	Ce que l'on peut ecrire sur le terminal depuis le dossier Projet_MTdV2023 :
+    $ python groupe1_AnalyseSyntaxique.py
+	
+ 	conseil Laura 1 : dans ce commentaire, faire le résumé du fichier à rajouter pour savoir ce qu'il fait 
+"""
+
 import sys
-
-import tokenize_MTdVplus as tokenize
-
+import groupe1_TokenizeTSplus as tokenize
 import os
 
 def main(file, output_tsv_file):
@@ -44,7 +49,7 @@ def write_tsv(tokens, output_tsv_file):
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
 		print("Il manque le fichier TS.")
-		print("Usage:\n\tpython main.py FICHIER.TSplus (SORTIE.tsv)")
+		print("Usage:\n\tpython groupe1_AnalyseSyntaxique.py FICHIER.TSplus (SORTIE.tsv)")
 		sys.exit(1)
 	if len(sys.argv) > 2:
 		output_tsv_file = sys.argv[2]

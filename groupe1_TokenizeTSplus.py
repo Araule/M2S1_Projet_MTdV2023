@@ -1,16 +1,60 @@
+#!/bin/python3
+# -*- coding: utf-8 -*-
+
+""" 
+	conseil Laura 1 : dans ce commentaire, faire le résumé du fichier à rajouter pour savoir ce qu'il fait et par quel fichier python il est appelé
+	conseil Laura 2 : en dessous, dans les fonctions, rajouter les informations (type, résumé, ect..)
+	Laura peut-être bug trouvé 1 : 
+				=> ce qui est écrit sur mon terminal
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:35: SyntaxWarning: invalid escape sequence '\('
+				line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:38: SyntaxWarning: invalid escape sequence '\*'
+				line = regex.sub("\*", " * ", line)
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:39: SyntaxWarning: invalid escape sequence '\+'
+				line = regex.sub("\+", " + ", line)
+    Laura peut-être bug trouvé 2 : 
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:4: SyntaxWarning: invalid escape sequence '\('
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:44: SyntaxWarning: invalid escape sequence '\('
+				line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:47: SyntaxWarning: invalid escape sequence '\*'
+				line = regex.sub("\*", " * ", line)
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:48: SyntaxWarning: invalid escape sequence '\+'
+				line = regex.sub("\+", " + ", line)
+    encore 3 :
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:4: SyntaxWarning: invalid escape sequence '\('
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:53: SyntaxWarning: invalid escape sequence '\('
+				line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:56: SyntaxWarning: invalid escape sequence '\*'
+				line = regex.sub("\*", " * ", line)
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:57: SyntaxWarning: invalid escape sequence '\+'
+				line = regex.sub("\+", " + ", line)
+	encore 4 :
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:4: SyntaxWarning: invalid escape sequence '\('
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:59: SyntaxWarning: invalid escape sequence '\('
+				line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:62: SyntaxWarning: invalid escape sequence '\*'
+				line = regex.sub("\*", " * ", line)
+				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:63: SyntaxWarning: invalid escape sequence '\+'
+				line = regex.sub("\+", " + ", line)
+"""
+
 import regex
-
 from typing import List
-
 import sys
+
 
 def clean_lines(text: str):
 	"""
-	Fonction qui nettoie un programme.
-	Le découpe par lignes.
-	Enlève les commentaires.
-	Renvoie les lignes avec leur numéro de lignes associées.
+	La fonction nettoie un programme TSplus, le découpe par lignes,
+    et enlève les commentaires.
+
+	Args:
+		text (str): _description_
+
+	Returns:
+		_type_: renvoie les lignes de code avec leur numéro de lignes associées
 	"""
+ 
 	# split lines
 	text = regex.split(r"\r\n|\n", text)
 	new_text = []
@@ -38,10 +82,20 @@ def clean_lines(text: str):
 			lines_number.append(line_n)
 	return (new_text, lines_number)
 
-def make_tokens(lines: List[str], lines_number: List[int]):
+
+def make_tokens(lines: List[str], lines_number: List[int]) -> list:
 	"""
-	Coupe les lignes en tokens (token, line_number, instruction_number).
+	La fonction coupe les lignes en tokens 
+ 	(token, line_number, instruction_number)
+
+	Args:
+		lines (List[str]): _description_
+		lines_number (List[int]): _description_
+
+	Returns:
+		list: _description_
 	"""
+
 	tokens = []
 	instruction_n = 1
 	assert(len(lines) == len(lines_number))
@@ -78,13 +132,21 @@ def make_tokens(lines: List[str], lines_number: List[int]):
 				instruction_n += 1
 	return tokens
 
-def check_test(expression, line_n, instruction_n):
-	"""
-	Fonction qui vérifie qu'on a bien si (expression == expression),
-	et envoie un message d'erreur sinon.
 
-	returns: un tableau de tokens, avec pour chaque token les informations [line_n, token, type_token, instruction_n, type_instruction, position_operation], dans cet ordre-là.
+def check_test(expression, line_n, instruction_n) -> list:
+	""" La fonction vérifie qu'on a bien 'si (expression == expression)',
+	sinon envoie un message d'erreur
+
+	Args:
+		expression (_type_): _description_
+		line_n (_type_): _description_
+		instruction_n (_type_): _description_
+
+	Returns:
+		list: un tableau de tokens, avec pour chaque token les informations suivantes
+  			[line_n, token, type_token, instruction_n, type_instruction, position_operation]
 	"""
+ 
 	variable_regex = r"([a-z]|[A-Z]|_)([a-z]|[A-Z]|[0-9]|_)*"
 	chiffre_regex = r"[0-9]+"
 	egalite_regex = r"=="
@@ -132,16 +194,26 @@ def check_test(expression, line_n, instruction_n):
 			erreur("Token non autorisé dans un test.", token=token, line_n=line_n, line=expression, token_n=i+1)
 	check_operation(operations_g_d["G"][0], operations_g_d["G"][1], line_n, expression, 1)
 	check_operation(operations_g_d["D"][0], operations_g_d["D"][1], line_n, expression, len(operations_g_d["G"]) + 1)
+	
 	return sortie
 
-def check_affectation(expression, line_n, instruction_n):
-	"""
-	Vérifier qu'à gauche on a un seul token de type variable, 
-	et qu'à droite on a une opération valide (appel de check_operation(tokens, types, line_n))
-	et renvoyer les types des tokens etc.
 
-	returns: un tableau de tokens, avec pour chaque token les informations [line_n, token, type_token, instruction_n, type_instruction, position_operation], dans cet ordre-là.
+def check_affectation(expression, line_n, instruction_n) -> list:
 	"""
+	La fonction vérifie qu'à gauche on a un seul token de type variable, 
+	et qu'à droite on a une opération valide (appel de check_operation(tokens, types, line_n)),
+	et renvoie les types des tokens etc.
+ 
+	Args:
+		expression (_type_): _description_
+		line_n (_type_): _description_
+		instruction_n (_type_): _description_
+
+	Returns:
+		list: un tableau de tokens, avec pour chaque token les informations 
+  			[line_n, token, type_token, instruction_n, type_instruction, position_operation]
+	"""
+
 	variable_regex = r"([a-z]|[A-Z]|_)([a-z]|[A-Z]|[0-9]|_)*"
 	chiffre_regex = r"[0-9]+"
 	affectation_regex = r"="
@@ -204,30 +276,34 @@ def check_affectation(expression, line_n, instruction_n):
 		resultat.append([line_n, token, type_token, instruction_n, "affectation", position_operation])
 
 	check_operation(right_tokens, types, line_n, expression, 2)
-		
 
 	return resultat
 
-"""
-Les paramètres line_n et line servent à l'affichage des erreurs.
 
-returns: None
-"""
-def check_operation(tokens, types, line_n, line, len_left=0):
-	"""
-	tokens: liste des tokens de l'opération.
-	types: type des tokens de l'opération.
-	Fonction qui ne fait rien si l'opération est valide.
+def check_operation(tokens: list, types, line_n, line, len_left=0):
+	""" 
+ 	La fonction ne fait rien si l'opération est valide.
 	Sinon, elle affiche une erreur avec la fonction erreur.
-	Vérifie qu'on a bien une suite de types qui fasse v o v o v o v, et que les o sont soit * soit	avec: v = variable ou valeur, o = operateur.
+ 
+	Vérifie qu'on a bien une suite de types qui fasse v o v o v o v, 
+ 	et que les o sont soit * soit avec: v = variable ou valeur, o = operateur.
 
 	par exemple
 	- autorisé : v tout seul , v o v, v o v o v, v o v (o v)*
 	- non autorisé : o, v o, o v, o v o, o o, v v.
 
-	Si ce n'est pas au bon format, il faut afficher une erreur (cf le power point)
-	Si un objet de type "valeur" est < 0 ou > 29 (tester en convertissant int(token) ), renvoyer une erreur de valeur.
+	Si ce n'est pas au bon format, il faut afficher une erreur
+	Si un objet de type "valeur" est < 0 ou > 29 (tester en convertissant int(token)), 
+ 	la fonction renvoie une erreur de valeur.
+
+	Args:
+		tokens (list): liste des tokens de l'opération
+		types (_type_): type des tokens de l'opération
+		line_n (_type_): _description_
+		line (_type_): _description_
+		len_left (int, optional): _description_. Defaults to 0.
 	"""
+
 	operateur_regex = r"[\+\*]"
 	assert len(tokens) == len(types)
 	if len(tokens) == 0:
@@ -264,11 +340,18 @@ def check_structure(tokens, stack=[], old_tokens=[]):
 	La fonction check_structure va vérifier la bonne correspondance entre
 	les mots-clé si, boucle, fin, } et l'utilisation de # (fin du programme).
 
-	Params:
-		tokens: la liste des tokens (avec toutes leurs informations, qui a été générée par la fonction make_tokens)
-		stack: les tokens de type boucle, si (0), si (1) et si, qui s'empilent et se dépilent au fur et à mesure qu'on les rencontre et qu'on rencontre un }.
-		old_tokens: les tokens déjà traités.
+	Args:
+		tokens (_type_): la liste des tokens avec toutes leurs informations, 
+  						qui a été générée par la fonction make_tokens
+		stack (list, optional): les tokens de type boucle, si (0), si (1) et si, 
+  							qui s'empilent et se dépilent au fur et à mesure qu'on les rencontre,
+        					et qu'on rencontre un }. Defaults to [].
+		old_tokens (list, optional): les tokens déjà traités. Defaults to [].
+
+	Returns:
+		_type_: _description_
 	"""
+
 	token = next_token(tokens, old_tokens)
 	if token[2] in ('boucle', 'si (0)', 'si (1)', 'si'):
 		# on empile
@@ -332,10 +415,12 @@ def check_structure(tokens, stack=[], old_tokens=[]):
 		last_token = old_tokens[-1]
 		erreur("Programme terminé sans avoir rencontré #.", token=last_token[2], line_n=last_token[1])
 
+
 def next_token(tokens, old_tokens):
 	token = tokens.pop(0) # On dépile le prochain token
 	old_tokens.append(token) # On empile les tokens déjà traités
 	return token
+
 
 def erreur(erreur_str, token="", line_n="", line="", token_n=""):
 	print("\033[91m", end="") # Met les prochains prints en rouge
@@ -352,6 +437,7 @@ def erreur(erreur_str, token="", line_n="", line="", token_n=""):
 		print("à la position "+str(token_n) + ".")
 	print("\033[0m", end="") # Remet la couleur par défaut
 	sys.exit(1)
+
 
 def warning(warning_str, token="", line_n="", line=""):
 	print("\033[93m", end="") # Met les prochains prints en jaune
