@@ -4,96 +4,72 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ## Groupe 1: création d'un analyseur syntaxique de la MTdV+
 
->>>
-<img src="images/alice.jpg" width="100" height="1OO">
-**Alice XXX** \
-Bla Bla Bla
->>>
+> <img src="/../pages/images/alice.png" width="100" height="1OO" />
+> **Alice XXX** \
+> Bla Bla Bla
 
 <br>
 
->>>
-![image_profil_kenza](images/kenza.jpg){width=100 height=100px}
-**Kenza XXX** \
-Bla Bla Bla
->>> 
+> <img src="/../pages/images/kenza.jpg" width="100" height="1OO" />
+> **Kenza XXX** \
+> Bla Bla Bla
 
 <br>
 
->>>
-![image_profil_liza](images/liza.jpg){width=100 height=100px}
-**Liza XXX** \
-Bla Bla Bla
->>> 
+> <img src="/../pages/images/liza.jpg" width="100" height="1OO" />
+> **Liza XXX** \
+> Bla Bla Bla
 
 ## Groupe 2 : création d'un gestionnaire des noms de variables
 
->>>
-<img src="images/laura.jpg" width="100" height="1OO">
-**Laura Darenne** \
-Bla Bla Bla
->>>
+> <img src="/../pages/images/laura.png" width="100" height="1OO" />
+> **Laura Darenne** \
+> Bla Bla Bla
 
 <br>
 
->>>
-![image_profil_shami](images/shami.jpg){width=100 height=100px}
-**Shami Thirion Sen** \
-Bla Bla Bla
->>> 
+> <img src="/../pages/images/shami.jpg" width="100" height="1OO" />
+> **Shami XXX** \
+> Bla Bla Bla 
 
 ## Groupe 3 : création d'un allocataire et gestionnaire de mémoire
 
->>>
-![image_profil_tifanny](images/tifanny.jpg){width=100 height=100px}
-**Tifanny XXX** \
-Bla Bla Bla
->>>
+> <img src="/../pages/images/tifanny.png" width="100" height="1OO" />
+> **Tifanny XXX** \
+> Bla Bla Bla
 
 <br>
 
->>>
-![image_profil_clement](images/clement.jpg){width=100 height=100px}
-**Clément XXX** \
-Bla Bla Bla
->>> 
+> <img src="/../pages/images/clement.jpg" width="100" height="1OO" />
+> **Clément XXX** \
+> Bla Bla Bla
 
 <br>
 
->>>
-![image_profil_fanny](images/fanny.jpg){width=100 height=100px}
-**Fanny XXX** \
-Bla Bla Bla
->>> 
+> <img src="/../pages/images/fanny.jpg" width="100" height="1OO" />
+> **Fanny XXX** \
+> Bla Bla Bla
 
 ## Groupe 4 : création d'un générateur de code MTdV à partir de la MTdV+
 
->>>
-![image_profil_agathe](images/agathe.jpg){width=100 height=100px}
-**Tifanny XXX** \
-Bla Bla Bla
->>>
+> <img src="/../pages/images/agathe.png" width="100" height="1OO" />
+> **Agathe XXX** \
+> Bla Bla Bla
 
 <br>
 
->>>
-![image_profil_sandra](images/sandra.jpg){width=100 height=100px}
-**Sandra XXX** \
-Bla Bla Bla
->>> 
+> <img src="/../pages/images/sandra.jpg" width="100" height="1OO" />
+> **Sandra XXX** \
+> Bla Bla Bla
 
 <br>
 
->>>
-![image_profil_fanny](images/valentina.jpg){width=100 height=100px}
-**Valentina XXX** \
-Bla Bla Bla
->>>
+> <img src="/../pages/images/valentina.jpg" width="100" height="1OO" />
+> **Valentina XXX** \
+> Bla Bla Bla
 
 <br>
 
->>>
-![image_profil_florian](images/florian.jpg){width=100 height=100px}
-**Valentina XXX** \
-Bla Bla Bla
->>> 
+> <img src="/../pages/images/florian.jpg" width="100" height="1OO" />
+> **Florian XXX** \
+> Bla Bla Bla
