@@ -22,12 +22,12 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ## Groupe 2 : création d'un gestionnaire des noms de variables
 
-<div class="box">
-  <div class="column is-narrow">
+<div>
+  <div>
     <img src="/../page/images/laura.jpg" width=100px>
+    <h4>Laura Darenne</h5>
   </div>
-  <div class="column">
-    <h5>Laura Darenne</h5>
+  <div>
     <p>Bla Bla Bla.</p>
   </div>
 </div>
