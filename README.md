@@ -4,11 +4,11 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ## Groupe 1: 
 
-#### Tâches
+### Tâches
 - création d'un analyseur syntaxique de la MTdV+
 - gestion de l'intégration globales
 
-#### Membres
+### Membres
 
 <img src="/../page/images/alice.jpg" width=100px> &nbsp; &nbsp; **Alice XXX**
 > Bla
@@ -27,11 +27,11 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ## Groupe 2
 
-#### Tâches
+### Tâches
 - création d'un gestionnaire des noms de variables
 - gestion de la doc et du reporting
 
-#### Membres
+### Membres
 
 <img src="/../page/images/laura.jpg" width=100px> &nbsp; &nbsp; **Laura Darenne**
 > Bla
@@ -45,11 +45,11 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ## Groupe 3
 
-#### Tâches
+### Tâches
 - création d'un allocataire et gestionnaire de mémoire
 - gestion du testing des scripts
 
-#### Membres
+### Membres
 
 <img src="/../page/images/tifanny.jpg" width=100px> &nbsp; &nbsp; **Tifanny XXX**
 > Bla
@@ -68,11 +68,11 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ### Groupe 4
 
-#### Tâches
+### Tâches
 - création d'un générateur de code MTdV à partir de la MTdV+
 - gestion de projet
 
-#### Membres
+### Membres
 
 <img src="/../page/images/agathe.jpg" width=100px> &nbsp; &nbsp; **Agathe XXX**
 > Bla
