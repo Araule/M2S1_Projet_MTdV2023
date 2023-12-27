@@ -22,9 +22,7 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ## Groupe 2 : création d'un gestionnaire des noms de variables
 
-<img src="https://user-images.githubusercontent.com/41547742/195372022-4e48d086-7af3-4f5a-a871-72522f3bde9b.jpg" width=200px height=200px />
-
-<img src="https://github.com/Araule/Projet_MTdV2023/blob/page/images/laura.jpg" width=100px height=1OOpx />
+<img src="https://github.com/Araule/Projet_MTdV2023/blob/44adec2e37016ece3b0ca7ecf2bea5d69eae7378/images/laura.jpg" width=100px height=1OOpx />
 
 > **Laura Darenne** \
 > Bla Bla Bla
