@@ -4,27 +4,36 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 
 ## Groupe 1: création d'un analyseur syntaxique de la MTdV+
 
-> <img src="/../page/images/alice.jpg" width="100" height="1OO" />
-> **Alice XXX** \
+> <img src="/../page/images/alice.jpg" width=100px>   **Alice XXX**
 > Bla Bla Bla
+> Et encore Bla 
 
 <br>
 
-> <img src="/../page/images/kenza.jpg" width="100" height="1OO" />
-> **Kenza XXX** \
+> <img src="/../page/images/kenza.jpg" width=100px>   **Kenza XXX**
 > Bla Bla Bla
+> Et encore Bla
 
 <br>
 
-> <img src="/../pages/images/liza.jpg" width="100" height="1OO" />
-> **Liza XXX** \
+> <img src="/../page/images/liza.jpg" width=100px>   **Liza XXX**
 > Bla Bla Bla
+> Et encore Bla
 
 ## Groupe 2 : création d'un gestionnaire des noms de variables
 
-> <img src="/../page/images/laura.jpg" width=100px>
-> **Laura Darenne** \
-> Bla Bla Bla
+<div class="box">
+  <div class="column is-narrow">
+    <img src="/../page/images/laura.jpg" width=100px>
+  </div>
+  <div class="column">
+    <h5>Laura Darenne</h5>
+    <p>Bla Bla Bla.</p>
+  </div>
+</div>
+
+<img src="/../page/images/laura.jpg" width=100px>   **Laura Darenne** \
+Bla Bla Bla
 
 <br>
 
