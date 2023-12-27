@@ -5,7 +5,7 @@ Ce dépôt a été créé par les élèves de M2 TAL Ingénieurie Multilingue de
 ## Groupe 1: création d'un analyseur syntaxique de la MTdV+
 
 >>>
-![image_profil_alice](images/alice.jpg){width=100 height=100px}
+<img src="images/alice.jpg" width="100" height="1OO">
 **Alice XXX** \
 Bla Bla Bla
 >>>
@@ -29,7 +29,7 @@ Bla Bla Bla
 ## Groupe 2 : création d'un gestionnaire des noms de variables
 
 >>>
-![image_profil_laura](images/laura.jpg){width=100 height=100px}
+<img src="images/laura.jpg" width="100" height="1OO">
 **Laura Darenne** \
 Bla Bla Bla
 >>>
