@@ -1,0 +1,102 @@
+\documentclass[12pt]{article}
+
+
+% all packages
+\usepackage[a4paper, total={6in, 9in}]{geometry} % pour que les marges soient plus petites
+\usepackage[utf8]{inputenc} % pour que le fichier soit bien en utf-8
+\usepackage{tabularx} % pour les tableaux
+
+\begin{document}
+
+% page 1 : page de présentation
+
+% titre, membres de groupe et date
+\title{\textbf{Rapport du Groupe X}\\ \vspace*{.5\baselineskip} Calculabilité}
+\author{Eleve UN, Eleve DEUX, Eleve TROIS, Eleve QUATRE}
+\date{17 Janvier 2023}
+
+\maketitle
+
+% à partir de la page 2
+% propositions de parties et sous-parties
+% n'hesitez pas à rajouter et supprimer selons vos besoins 
+\newpage
+
+\section{Création du gestionnaire de noms de variable}
+Dans le cadre du projet collectif ... le groupe X se charge de la gestion de ...
+
+\subsection{Fonctionnement du gestionnaire de noms de variable}
+Bla.
+
+\subsection{Conception du gestionnaire de noms de variable}
+Bli.
+
+\subsection{Défis rencontrés} % et comment ils ont été résolu
+
+% sans numérotation, avec retour à la ligne
+\paragraph{problème 1 \\}
+Blo.
+
+% sans numérotation, sans retour à la ligne
+\paragraph{problème 2}
+Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. 
+
+% avec numérotation, avec retour à la ligne
+\subsubsection{problème 3}
+Bof.
+
+\subsection{Répartition du travail}
+Bly.
+    
+\section{Gestion de la doc et du reporting}
+Dans le cadre du projet collectif ... le groupe X se charge de la gestion de ...
+
+\subsection{Rôle de gestionnaire de la doc et du reporting}
+Bla.
+
+\subsection{Défis rencontrés} % et comment ils ont été résolu
+
+% sans numérotation, avec retour à la ligne
+\paragraph{problème 1 \\}
+Blo.
+
+% sans numérotation, sans retour à la ligne
+\paragraph{problème 2}
+Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. Blu. 
+
+% avec numérotation, avec retour à la ligne
+\subsubsection{problème 3}
+Bof.
+
+\subsection{Répartition du travail}
+Bly.
+
+\section{Si besoin de faire un tableau avec latex *wink wink groupe 1*}
+
+\begin{table}[!ht]
+\begin{center}
+\begin{tabularx}{\columnwidth}{|l|X|X|} % ici trois colonnes avec section plus courte à gauche
+ \hline
+  & titre colonne 1 & titre colonne 2 \\
+ \hline
+ 1  & item 11  & item 21  \\
+\hline
+\end{tabularx}
+\caption{Titre du tableau 1}
+\end{center}
+\end{table}
+
+\begin{table}[!ht]
+\begin{center}
+\begin{tabularx}{\columnwidth}{|X|>{\centering\arraybackslash}X|X|} % ici trois colonnes de même taille
+ \hline
+  & titre colonne 1 centré & titre colonne 2 \newline pas centré \\
+ \hline
+ 1  & item 11  & item 21 pas centré  \\
+\hline
+\end{tabularx}
+\caption{Titre du tableau 2}
+\end{center}
+\end{table}
+
+\end{document}
