@@ -6,13 +6,12 @@
     $ python analyseSyntaxique.py
 	
  	conseil Laura 1 : dans ce commentaire, il serait bien de rajouter un résumé du fichier à rajouter pour savoir ce qu'il fait
-	conseil Laura 2 : Le fichier TSV est au format ASCII. Serait-il possible de le print au format utf-8 pour éviter tout problème
- 
-	# infos du groupe 2 pour groupe 1 : il nous faut infos où la variable est utilisée pour la dernière fois
-    => pour chaque variable, numéro d'instruction où on doit le supprimer (soit dernier numéro d'instruction ou il existe + 1)
-    
-    # infos du groupe 2 au groupe 1 : scope_boucle et line_n sont bizarres
-    scope_boucle ne renvoit à aucune instruction (voir TSV/test.tsv)
+
+	demandes du groupe 2 pour groupe 1 : il nous faudrait une information supplémentaire pour pouvoir supprimer les variables au fur et à mesure
+ 		- il nous faudrait le numéro d'instruction où la variable est utilisée pour la dernière fois
+		OU MIEUX
+		- il nous faudrait le numéro d'instruction où supprimer la variable,
+  			soit numéro d'instruction où la variable est utilisée pour la dernière fois + 1
 """
 
 import sys

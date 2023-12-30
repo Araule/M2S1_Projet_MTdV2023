@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-	conseil Laura 1 : dans ce commentaire, il serait bien de rajouter un résumé du fichier à rajouter pour savoir ce qu'il fait et par quel fichier python il est appelé
-	conseil Laura 2 : en dessous, dans les fonctions, rajouter les informations (type, résumé, ect..)
-	Laura peut-être bug trouvé 1 : 
+	conseil Laura 1 : dans ce commentaire, il serait bien de rajouter un petit résumé du fichier à rajouter pour savoir ce qu'il fait et par quel fichier python il est appelé
+	conseil Laura 2 : en dessous, dans les fonctions, il serait bien de rajouter les informations (type, résumé, ect..) des fonctions
+ 
+	Laura peut-être "bug" trouvé 1 : 
 				=> ce qui est écrit sur mon terminal
 				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:35: SyntaxWarning: invalid escape sequence '\('
 				line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
@@ -12,7 +13,7 @@
 				line = regex.sub("\*", " * ", line)
 				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:39: SyntaxWarning: invalid escape sequence '\+'
 				line = regex.sub("\+", " + ", line)
-    Laura peut-être bug trouvé 2 : 
+    Laura même "bug" : 
 				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:4: SyntaxWarning: invalid escape sequence '\('
 				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:44: SyntaxWarning: invalid escape sequence '\('
 				line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
