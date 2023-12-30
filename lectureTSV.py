@@ -70,7 +70,7 @@ def getTSV(path: str) -> List[str]:
             return f.readlines()
 
 
-def affectations_variables(fichier_tsv: list) -> Dict[int, Dict]:
+def affectations_variables(fichier_tsv: list) -> Dict[str, Dict]:
     """lit le fichier une première fois pour extaire 
     les colonnes « affectations » et leur « numéro d'instruction »
 
@@ -78,42 +78,33 @@ def affectations_variables(fichier_tsv: list) -> Dict[int, Dict]:
         fichier_tsv (list): fichier tsv avec les instructions mtdV+
 
     Returns:
-        dict(dict): { num_instruction : [variable, valeur] }
-        soit affectations[num_instruction][0] = variable
-        et affectations[num_instruction][1] = valeur
-
+        dict(dict): { instruction_n : { "G" : variable, "D" : valeur }
     """
     # on nettoie le fichier pour ne garder que les affectation
-    lines = [
-        line.rstrip().split("\t")
-        for line in fichier_tsv
-        if line.rstrip().split("\t")[5] == "affectation"
-    ]
+    lines = [line.rstrip().split("\t") for line in fichier_tsv if line.rstrip().split("\t")[5] == "affectation"]
 
-    
+    # 'affectations' contiendra l'affectation de chaque 
     affectations = {}
     for line in lines:
-        num_instruction = line[4]
-        token = line[2]
-        position = line[6]  # G, M ou D
-    
-        pprint(affectations)
+        instruction_n, token, position = line[4], line[2], line[6]  # position = G, M ou D
 
-        if num_instruction not in affectations.keys() and position == "G":
+        if instruction_n not in affectations.keys() and position == "G":
             # nouvelle instruction
             # token est forcément le variable en cours d'affectation
-            affectations[num_instruction] = [token]
-        elif num_instruction in affectations.keys() and position == "D" and len(affectations[num_instruction]) == 1 :
+            affectations[instruction_n] = { 'G' : token }
+        elif instruction_n in affectations.keys() and position == "D" and position not in affectations[instruction_n].keys() :
             # il s'agit de la première valeur
-            affectations[num_instruction].append(token)
-        elif num_instruction in affectations.keys() and position == "D" and len(affectations[num_instruction]) > 1 :
+            affectations[instruction_n]['D'] = token
+        elif instruction_n in affectations.keys() and position == "D" and position in affectations[instruction_n].keys() :
             # s'il s'agit de la deuxième valeur
-            affectations[num_instruction][1] += " " + token
-        elif num_instruction in affectations.keys() and position == "M":
+            affectations[instruction_n]['D'] += " " + token
+        elif instruction_n in affectations.keys() and position == "M":
             pass
         else:
             print("erreur")
+            
     # pprint(affectations)
+
     return affectations
 
 
@@ -137,7 +128,7 @@ def lectureTSV(tsv: list, affectations: dict, variables: GestionnaireVariables):
         if line.rstrip().split("\t")[5] == "affectation":
             if num_instruction in affectations.keys():
                 # l'instruction n'a pas encore été géré
-                nom_variable = affectations[num_instruction][0]
+                nom_variable = affectations[num_instruction]['G']
                 # vérifier si la variable n'existe pas
 
                 if not variables.doesVariableExist(nom_variable):
@@ -191,16 +182,10 @@ if __name__ == "__main__":
     print(f'Impression des variables courantes :')
     variables.printVariables()
 
-    # on efface ce qui reste dans le gestionnaire de noms de variable
-
-    ### Laura ###
-    '''
-    - Je pense qu'on devrait faire cette étape (effacement)
-    seulement si les autres groupes rajoutent leurs modules dans ce fichier
-    - Est-ce qu'on s'est mis d'accord dessus ?
-    '''
+    # nous avons un module pour effacer complètement
+    # ce qu'il y a dans le gestionnaire de noms de variable
+    # comme cela se ferait à la fin d'une compilation
     variables.effacementGestionnaire()
 
     # on vérifie que tout à bien été effacé
     variables.printVariables()
-
