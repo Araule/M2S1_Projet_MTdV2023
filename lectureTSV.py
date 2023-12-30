@@ -21,15 +21,6 @@
     # info pour groupe 3 et groupe 4 : nous attendons un changement une fichier tsv pour 
     pouvoir effacer les variables au fur et à mesure
     Nous créerons surement une fonction pour cela plus tard
-    
-    TO DO LIST de Shami :
-    - enlever le M:'=' dans le dictionnaire des affectation
-        => j'ai tenté de le faire, il va falloir que tu vérifie !
-    
-    
-    TO DO LIST du groupe 2 :
-        - vérifier commentaires
-        - verification si on a pris le max d'erreurs
 """
 
 from typing import List, Dict
@@ -183,6 +174,3 @@ if __name__ == "__main__":
     
     # on vérifie que tout à bien été effacé
     variables.printVariables()
-
-
-
