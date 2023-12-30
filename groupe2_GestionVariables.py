@@ -3,6 +3,9 @@
 
 """ Gestionnaire de noms de variable pour programme MdtV+ au format de dictionnaire
     Le fichier contient la classe et ses méthodes
+    
+    Pour le groupe 3 et 4 : n'hésitez pas à nous contacter si vous avez besoin 
+    d'une nouvelle méthode ou que l'on modifie une déjà existante
 """
 
 import regex
@@ -68,7 +71,7 @@ class GestionnaireVariables:
             print("La variable n'existe pas dans le gestionnaire.\033[00m")
             sys.exit(1)
 
-    def getVariables(self):
+    def printVariables(self):
         """ affichage de toutes les variables du gestionnaire
         """
         if len(self.variables.keys()) > 0 :
@@ -76,6 +79,14 @@ class GestionnaireVariables:
                 print(f"{nom}: {adresse}")
         else :
             print("\033[92mLe gestionnaire de noms de variable est actuellement vide.\033[00m")
+    
+    def getDict(self) -> dict :
+        """ retourne le dictionnaire de noms de variable
+        
+        Returns:
+            dict: gestionnaire de noms de variable
+        """
+        return self.variables
 
     def getAdresse(self, nom: str) -> int:
         """ retourne l'adresse de la variable
