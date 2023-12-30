@@ -7,7 +7,7 @@
     
     Ce fichier lit les fichiers tsv MDTV+
     -Pour l'instant, il met à jour le gestionnaire de noms de variables au fur et à mesure. 
-    -groupe 3 et groupe 4 => vous pouvez rajouter vos modules dans la méthode X
+    -groupe 3 et groupe 4 => vous pouvez rajouter vos modules directement ici si vous le souhaitez
     
     info du groupe 2 pour groupe 3 : pour l'instant, on donne comme adresse 0 ou 1 pour les tests
     Nous attendons votre module pour rajouter la vraie adresse mémoire.
@@ -20,21 +20,6 @@
     info pour groupe 3 et groupe 4 : Nous sommes en train de voirs pour avoir une modif du fichier tsv pour 
     pouvoir effacer les variables au fur et à mesure. Nous créerons surement une fonction pour cela plus tard !
     Pour l'instant, le gestionnaire se vide à la fin du fichier.
-
-    ### Laura, il faut s'assurer auprès des autres groupes 
-        -  si fin de fichier == fin du programme (sinon problème avec suppression)
-
-        - si ce n'est pas déjà fait (je n'ai pas tout suivi ):
-            -il faut bien expliquer nos «attentes» aux groupes 3 et 4 : aka, 
-            - nous proposons d'avoir un programme_commun (lectureTSV.py) 
-            pour la lecture des fichiers MDTV+
-            - (raison)
-            - logique 
-        - si jamais tu te sens inspriré de faire un .md pour expliquer le  «flow» , comme pour PPE2 
-        (j'exagère je sais)
-        - mais c'est TRÈS IMPORTANT de comprendre les étapes
-        - sinon à 15 , danger!
-
 """
 
 from typing import List, Dict
@@ -174,8 +159,6 @@ if __name__ == "__main__":
     pprint(f'affectations= {affectations}')
 
     # là ou tout se passe
-    # groupe 3 et 4, vous allez surement devoir rajouter
-    # vos trucs ici
     lectureTSV(fichier_tsv, affectations, variables)
 
     # on vérifie que toutes les variables sont bien dans le dictionnaire
