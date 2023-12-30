@@ -18,6 +18,11 @@
     # info du groupe 2 pour les groupes 3 et 4 :
     lorsque rencontre d'une variable, on fait variables.doesVariableExist()
     - si True, la variable existe dans le gestionnaire de noms de variable
+
+    ### Laura### , reallocation est certainement à groupe3 de gérer selon LEUR critères:
+     (trop longues, corrompus etc. )
+     - ce qui nous intéresse c'est une PREMIÈRE allocation d'espace, si nouvelle variable
+
     => réallocation ? Nous on ne fait rien pour l'instant
     - si False, la variable n'existe pas dans le gestionnaire
     => pour le groupe 3, on a besoin que vous créiez une adresse pour la variable,
@@ -33,7 +38,7 @@
             - \033[92 permet d'écrire en vert sur le terminal
 """
 
-from typing import List
+from typing import List, Dict
 from pprint import pprint
 from collections import defaultdict
 from groupe2_GestionVariables import GestionnaireVariables
@@ -66,72 +71,96 @@ def getTSV(path: str) -> List[str]:
             return f.readlines()
 
 
-def extract_dict(fichier_tsv):
+def extract_dict(fichier_tsv) -> Dict[int, Dict]:
     """_summary_
 
     Args:
-        fichier_tsv (_type_): _description_
+        fichier_tsv (_type_): fichier_tsv_MDTV+_groupe1
     
     Returns:
-        _type_: _description_
+        dict(dict): {numero_instrucion : {'G' : lhs_nomvar , 'M': '=', 'D': rhs_valeur_de_nom_var}}
+
+    ### Laura ### [ et autres  groupes ] 
+    : sauf vérification des conditions pour les valeurs tel que x=x+1 (si x existe bla bla)
+        que fait-on des valeurs 'rhs_valeur'
+        => est-ce que groupe3 stocke valeur_de_variable(en même temps de l'adresse?)
     """
     result_dict = defaultdict(lambda: defaultdict(str))
+    # pour l'instant nous traitons que les « affectations »
     lines = [line.rstrip().split('\t') for line in fichier_tsv if line.rstrip().split('\t')[5] == 'affectation']
-    ''' rajout «test» ?  '''
     for line in lines:
-        key, inner_key, value = int(line[1]), line[6], line[2] # instruction_num, position, variable
-        if key not in result_dict:
-           result_dict[key] = {}
-        if inner_key in result_dict[key]:
-            result_dict[key][inner_key] += ' '+value
+        # instruction_num, position gauche milieu droite, valeur = int ou var_operator_int ou var_operateur_var
+        lhs_var, middle_operator, rhs_value = int(line[1]), line[6], line[2] 
+        if lhs_var not in result_dict:
+           result_dict[lhs_var] = {}
+        if middle_operator in result_dict[lhs_var]:
+            result_dict[lhs_var][middle_operator] += ' '+rhs_value
         else:
-            result_dict[key][inner_key] = value
+            result_dict[lhs_var][middle_operator] = rhs_value
 
     return(dict(result_dict))
 
 
-# extract 
-def extract_vars(var_dict):
+# fonction qui trouve les variables , ajou
+def extract_vars(var_dict, variables):
+    """_summary_
 
-    # 'variables' est le gestionnaire de noms de variable
-    # à l'initialisation, il est vide
-    variables = GestionnaireVariables()
-    variables.getVariables
+    - trouve les variables
+    - ajoute_au_gestionnnaire de variable
+    - demande au module_groupe3 d'allouer une espace pour cette nouvelle var
+    - et je_ne_sais_quoi_d'autre...
+    - qui à quelle moment gère SUPPRESSION ?
 
-    for instruction in var_dict:
-        var = var_dict[instruction]['G']
-        #pour affectation M toujours = et test M toujours == ??
-        # qui récup "D" les valeurs 
+    Args:
+        dictionnaire_variables_valeurs, objet_gestionnaire_nom_de_variable : _description_
+    
+    Returns:
+        dict(dict): {numero_instrucion : {'G' : lhs_nomvar , 'M': '=', 'D': rhs_valeur}}
+
+    ### Laura ### [ et autres  groupes ] 
+    : que fait-on des valeurs 'D'
+    """
+
+    for instruction_num in var_dict:
+        nom_var = var_dict[instruction_num]['G']
 
         # vérifier si 'var' existe déjà 
-        if not variables.doesVariableExist(var):
-            variables.addVariable(var)
-        # else re-assign ?
+        if not variables.doesVariableExist(nom_var):
+            variables.addVariable(nom_var, 0)
 
-        # allouer adresseMémoire ? appel fonction groupe3 ?
-        # valeur 'D'
-        value = var_dict[instruction]['D']
-        if not value.isnumeric():
-            # c'est une affectation plus longue type [x+y, x+y+z, x+1+y, x+2, ...]
-            # et chaque valeur alterné depuis 1er est:  soit variable , soit int
-                # on part du principe chaque valeur alterné depuis le 2eme est opérateur 
+        # il faut certainement allouer une adresse mémoire ici 
+        rhs_value = var_dict[instruction_num]['D']
+        if not rhs_value.isnumeric():
+
+            ### Laura ###
+            # c'est une affectation plus longue type [x + y, x + y + z, x+1+y, x+2, ...]
+            # on part du principe:
+                # chaque valeur alternée depuis 1er est:  soit variable , soit int
+                # chaque valeur alternée depuis le 2eme est opérateur 
+                # retourne erreur si nouvelle variable est une rhs_valeur , alors qu'on ne la connait pas
+                    # x = x+y =>  où «y» non connu ! 
             
-            # vérifie syntaxe ## à discuter si utile ou pas
-            value = value.split() 
-            print(f'value = {value}')
+            ### vérification syntaxe ##  utile ou pas ##
+            rhs_value = rhs_value.split() 
+            # print(f'value = {rhs_value}')
             operators = ['+', '*', '-' ] # les opérateur permis pour 'D' donc sans = ou ==
-            for is_val in value[0::2]:
-                if is_val.isnumeric() :
-                    is_val = int(is_val)
-                    print(type(is_val).__name__)
-                    if type(is_val).__name__ not in ['int', 'str']:
-                        if value[1: :2] not in operators :
+            for value_token in rhs_value[0::2]:
+                if value_token.isnumeric() :
+                    value_token = int(value_token)
+                    # print(type(value_token).__name__)
+                    if type(value_token).__name__ not in ['int', 'str']:
+                        if rhs_value[1: :2] not in operators :
                             print(f'invalid syntax')
-                    elif type(is_val).__name__ == 'str' and not variables.doesVariableExist(is_val):
-                        print(f'Erreur, {is_val} utilisé avant son affectation.')
-                    
-                
-        '''   reste à gérér réallocation x = x+y , mais fatiguée pour aujourd'hui'''
+                    elif type(value_token).__name__ == 'str' and not variables.doesVariableExist(value_token):
+                        print(f'Erreur, {value_token} utilisé avant son affectation.')
+            '''
+            -Ici, une fois syntaxe vérifié qu'est-ce qui reste à faire ?
+            - à priori : nouvelle variable gérée 
+            - il faut que qqun récup 'D'
+            - faut-il faire une méthode/fonction qui puisee retourner la valeur
+            - je sais nous ne nous occupons pas des valeurs 
+            - mais qqun le stocke ?
+            '''        
 
 if __name__ == "__main__":
     
@@ -140,10 +169,15 @@ if __name__ == "__main__":
         print("\033[91mIl faut le chemin vers le fichier tabulaire.") # affiche en rouge
         print("Usage:\n\t$ python groupe2_lectureTSV.py .\\TSV\\fichier.tsv\033[0m")
         sys.exit(1)
+
+    # 'variables' est le gestionnaire de noms de variable
+    # à l'initialisation, il est vide
+    variables = GestionnaireVariables()
+    #variables.getVariables
     
     # 'fichier_tsv' est une liste contenant le fichier tsv
-    # on garde le contenu du fichier sans le titre
+    # contenu du fichier sans le titre 
     fichier_tsv = getTSV(sys.argv[1])[1:]
-    var_dict = extract_dict(fichier_tsv)  # { num_instruction : {'G': var , 'M': = , 'D'= valeur }}
-    pprint(var_dict)
-    extract_vars(var_dict) # là ou tout se passe 
+    var_dict = extract_dict(fichier_tsv)  # { num_instruction : {'G': lhs_var , 'M': = , 'D'= rhs_valeur }}
+    #pprint(var_dict)
+    extract_vars(var_dict, variables) # là ou tout se passe 
