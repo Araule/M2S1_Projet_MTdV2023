@@ -18,7 +18,7 @@ class GestionnaireVariables:
         """
         self.variables = {}
 
-    def addVariable(self, nom: str, adresse):
+    def addVariable(self, nom: str):
         """ ajout de la variable dans le gestionnaire
 
         Args:
@@ -127,3 +127,10 @@ class GestionnaireVariables:
         else:
             # sinon
             return False
+
+      
+    def effacementGestionnaire(self) :
+        """ efface le gestionnaire de noms de variables
+            à appeler à la fin du programme
+        """
+        self.variables = {}
