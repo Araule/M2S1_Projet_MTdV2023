@@ -10,11 +10,22 @@
     de fonctions qui peuvent être utile par les autres groupes. 
     Les groupes 3, puis 4 devront surement partir de ce fichier pour rajouter leurs modules.
     
+    # info du groupe 2 pour groupe 3 : pour l'instant, on donne comme adresse 0 ou 1 pour les tests
+    Nous attendons votre module pour reprendre cette partie-là !
+
+    # question du groupe 2 pour groupe 4 : comment sera gérer le test "==" ?
+    
+    # info du groupe 2 pour les groupes 3 et 4 :
+    lorsque rencontre d'une variable, on fait variables.doesVariableExist()
+    - si True, la variable existe dans le gestionnaire de noms de variable
+    => réallocation ? Nous on ne fait rien pour l'instant
+    - si False, la variable n'existe pas dans le gestionnaire
+    => pour le groupe 3, on a besoin que vous créiez une adresse pour la variable,
+        quelque chose comme memoires.createAdresse("nomvar")
+        de sorte que nous puissons faire quelque chose comme ceci 
+        variables.addVariable("nomvar", memoires.getAdresse("nomvar"))
+    
     TO DO LIST :
-        - continuer de lire le fichier tsv pour arriver à lire les lignes 
-            et modifier le gestionnaire de noms de variables
-        - pour l'instant, l'adresse est 0 à l'initialisation, 1 si on le modifie 
-            (cela le restera tant que le groupe 3 n'aura pas fait leur gestionnaire)
         - faire attention à bien commenter les fonctions
         - ne pas hésiter à rajouter des si else pour prendre en compte les possibles erreurs
             - \033[91 permet d'écrire en rouge sur le terminal
@@ -25,10 +36,10 @@
 from typing import List
 from pprint import pprint
 from collections import defaultdict
-
 from groupe2_GestionVariables import GestionnaireVariables
 import os
 import sys
+
 
 def getTSV(path: str) -> List[str]:
     """ verifie que le chemin est correcte 
@@ -43,20 +54,27 @@ def getTSV(path: str) -> List[str]:
 
     # on vérifie que le chemin existe
     if not os.path.exists(path):
-        print("\033[91mLe fichier {} n'existe pas.\033[0m".format(path)) # affiche en rouge
+        print("\033[91mLe fichier {} n'existe pas.\033[0m".format(path))
         sys.exit(1)
     # alors on vérifie que le chemin renvoie bien un fichier
     elif not os.path.isfile(path):
-        print("\033[91mLe chemin {} ne renvoie pas vers un fichier.\033[0m".format(path)) # affiche en rouge
+        print("\033[91mLe chemin {} ne renvoie pas vers un fichier.\033[0m".format(path))
         sys.exit(1)
     # alors on récupère le fichier
     else:
         with open(path, "r", encoding="ASCII") as f :
             return f.readlines()
-            
-# groupe2 
-def extract_dict(fichier_tsv):
 
+
+def extract_dict(fichier_tsv):
+    """_summary_
+
+    Args:
+        fichier_tsv (_type_): _description_
+    
+    Returns:
+        _type_: _description_
+    """
     result_dict = defaultdict(lambda: defaultdict(str))
     lines = [line.rstrip().split('\t') for line in fichier_tsv if line.rstrip().split('\t')[5] == 'affectation']
     ''' rajout «test» ?  '''
@@ -72,7 +90,7 @@ def extract_dict(fichier_tsv):
     return(dict(result_dict))
 
 
- # extract 
+# extract 
 def extract_vars(var_dict):
 
     # 'variables' est le gestionnaire de noms de variable
@@ -115,59 +133,17 @@ def extract_vars(var_dict):
                 
         '''   reste à gérér réallocation x = x+y , mais fatiguée pour aujourd'hui'''
 
-
-def main():
+if __name__ == "__main__":
+    
     # on vérifie le nombre d'arguments
     if len(sys.argv) != 2 :
-        print("\033[91mIl manque le chemin vers le fichier tabulaire.") # affiche en rouge
+        print("\033[91mIl faut le chemin vers le fichier tabulaire.") # affiche en rouge
         print("Usage:\n\t$ python groupe2_lectureTSV.py .\\TSV\\fichier.tsv\033[0m")
         sys.exit(1)
     
-    # 'fichier' est une variable str contenant le fichier tsv
-    fichier_tsv = getTSV(sys.argv[1])[1:] 
+    # 'fichier_tsv' est une liste contenant le fichier tsv
+    # on garde le contenu du fichier sans le titre
+    fichier_tsv = getTSV(sys.argv[1])[1:]
     var_dict = extract_dict(fichier_tsv)  # { num_instruction : {'G': var , 'M': = , 'D'= valeur }}
     pprint(var_dict)
     extract_vars(var_dict) # là ou tout se passe 
-
-
-if __name__ == "__main__":
-    main()
-    
-
-
-
-
-
-
-    
-    
-
-    '''
-    ##     Pour Laura    ##
-
-    getVariables() -> plus utile si retourne la (liste ou autre format) des variables 
-    # qui alloue adresseMemoire pour nouveau var? -> rajout fonction GestionVariables 
-
-
-ex fichier si0
-    groue2 : « affectation »
-    qui gère « test »  == [nous]
-        car, si + test -> affectation
-
-
-    ## pour Shami ## 
-
-    APRÈS lecture :
-        ## variables.doesVariableExist(var)
-            # si existe alors que rencontré première fois en fichier -> que fait-on ?
-    
-        ## si n'existe pas -> création
-            ## variables.addVariable(var) 
-            ## create adresseMemoire() pour nouveau variable gérée par quelle fonctions ?
-            ## updateAdresseMemoire() ->  à quel point / qui décide ça?
-    
-        ## si existe -> réallocation ?
-
-    
-    '''
-

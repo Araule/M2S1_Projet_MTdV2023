@@ -5,7 +5,7 @@
     Le fichier contient la classe et ses méthodes
     
     Pour le groupe 3 et 4 : n'hésitez pas à nous contacter si vous avez besoin 
-    d'une nouvelle méthode ou que l'on modifie une déjà existante
+    d'une nouvelle méthode ou si vous avez besoin que l'on modifie une déjà existante
 """
 
 import regex
@@ -18,7 +18,7 @@ class GestionnaireVariables:
         """
         self.variables = {}
 
-    def addVariable(self, nom: str):
+    def addVariable(self, nom: str, adresse):
         """ ajout de la variable dans le gestionnaire
 
         Args:
@@ -79,7 +79,7 @@ class GestionnaireVariables:
                 print(f"{nom}: {adresse}")
         else :
             print("\033[92mLe gestionnaire de noms de variable est actuellement vide.\033[00m")
-    
+
     def getDict(self) -> dict :
         """ retourne le dictionnaire de noms de variable
         
@@ -88,6 +88,10 @@ class GestionnaireVariables:
         """
         return self.variables
 
+    # peut servir pour vérifier que l'adresse est bien la même
+    # dans le module gestion variables et gestion mémoires
+    # si il n'est pas utile
+    # nous le supprimerons plus tard
     def getAdresse(self, nom: str) -> int:
         """ retourne l'adresse de la variable
 

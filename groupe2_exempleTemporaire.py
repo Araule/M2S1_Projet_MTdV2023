@@ -14,14 +14,14 @@ from groupe2_GestionVariables import GestionnaireVariables
 
 variables = GestionnaireVariables()
 
-variables.getVariables() # vide
+variables.printVariables() # vide
 
 variables.addVariable("a")
-variables.getVariables() # a0
+variables.printVariables # a0
 
 variables.updateAdresse("a")
 variables.addVariable("b")
-variables.getVariables() # a1 b0
+variables.printVariables # a1 b0
 
 variables.deleteVariable("a")  
 for v in ["a", "b"] :
@@ -29,3 +29,6 @@ for v in ["a", "b"] :
         print(f"la variable {v} existe.") # b
     else :
         print(f"la variable {v} n'existe pas.") # a
+
+print(variables)
+print(variables.getDict)
