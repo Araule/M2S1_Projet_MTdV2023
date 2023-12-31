@@ -5,7 +5,7 @@ L'idée c'est d'avoir un programme commun «lectureTSV» via lequel :
 	- car chaque **instruction** « ex. affectation - test - boucle » doit être gérée l'une après l'autre
 	ex:
 	- étape1 - gestion de variable (groupe 2)
-	- étape2 - gestion mémoirec (groupe 3)
+	- étape2 - gestion mémoire (groupe 3)
 	- étape3 - déplacement bande (groupe 4)
 	- repeat jusqu'à la fin du fichier 
 
@@ -24,7 +24,7 @@ L'idée c'est d'avoir un programme commun «lectureTSV» via lequel :
 **La fonction lecturetsv()** :
 
 	- lit le fichier tsv ligne par ligne. 
-	- nos modules gèrent le gestionnaire de noms de variable 
+	- nos (groupe 2) modules gèrent le gestionnaire de noms de variable 
 	- on a laissé de l'espace pour que vous,  (groupe 3 et groupe 4) puissiez rajouter ce que vous voulez dans cette boucle.
 
 **vider le gestionnaire à la fin du programme**
