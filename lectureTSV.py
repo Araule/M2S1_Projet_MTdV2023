@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """ 
+    Commencez par lire « CommentCaMarche_par_groupe2.md »
+
     Ce que l'on peut ecrire sur le terminal depuis le dossier Projet_MTdV2023 :
     $ python lectureTSV.py ./TSV/fichier.tsv
     
