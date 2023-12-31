@@ -6,7 +6,8 @@ L'idée c'est d'avoir un programme commun «lectureTSV» via lequel :
 	ex:
 	- étape1 - gestion de variable (groupe 2)
 	- étape2 - gestion mémoire (groupe 3)
-	- étape3 - déplacement bande (groupe 4)
+	- étape3 - récupération de l'adresse pour gestion de variable si besoin (groupe2)
+	- étape4 - déplacement bande (groupe 4)
 	- repeat jusqu'à la fin du fichier 
 
 
@@ -33,4 +34,4 @@ L'idée c'est d'avoir un programme commun «lectureTSV» via lequel :
 
 ## A vous de jouer
 - Maintenant, nous attendons vos propositions et vos commentaires concernant le **fonctionnement entre modules**. 
-- Fallait qu'on ait quelque chose pour voir si notre module fonctionne ^
+- Fallait qu'on ait quelque chose pour voir si notre module fonctionne ^^
