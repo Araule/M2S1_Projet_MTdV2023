@@ -18,10 +18,6 @@
 
     question du groupe 2 pour groupe 4 : comment sera gérer le test "==" ? Nous sommes là si
     vous avez besoin d'un module supplémentaire
-    
-    info pour groupe 3 et groupe 4 : Nous sommes en train de voirs pour avoir une modif du fichier tsv pour 
-    pouvoir effacer les variables au fur et à mesure. Nous créerons surement une fonction pour cela plus tard !
-    Pour l'instant, le gestionnaire se vide à la fin du fichier.
 """
 
 from typing import List, Dict
@@ -67,10 +63,10 @@ def affectations_variables(fichier_tsv: list) -> Dict[str, Dict]:
     Returns:
         dict(dict): { instruction_n : { "G" : variable, "D" : valeur }
     """
-    # on nettoie le fichier pour ne garder que les affectation
+    # on nettoie le fichier pour ne garder que les affectations
     lines = [line.rstrip().split("\t") for line in fichier_tsv if line.rstrip().split("\t")[5] == "affectation"]
 
-    # 'affectations' contiendra l'affectation de chaque 
+    # 'affectations' contiendra l'affectation de chaque variable
     affectations = {}
     for line in lines:
         instruction_n, token, position = line[4], line[2], line[6]  # position = G, M ou D
@@ -88,14 +84,52 @@ def affectations_variables(fichier_tsv: list) -> Dict[str, Dict]:
         elif instruction_n in affectations.keys() and position == "M":
             pass
         else:
-            print("erreur")
-            
-    # pprint(affectations)
+            print("erreur dictionnaire 'affectations' dans la fonction affectation variables")
 
     return affectations
 
+# on a essayé de prendre en compte les boucles
+# notre logique n'est peut-être pas parfaite, n'hésitez pas à nous le dire !
+def suppression_variables(fichier_tsv: list) -> Dict[str, Dict]: 
+    
+    """lit le fichier une première fois pour extaire 
+    les endroits où supprimer des variables inutiles
 
-def lectureTSV(tsv: list, affectations: dict, variables: GestionnaireVariables):
+    Args:variables
+        fichier_tsv (list): fichier tsv avec les instructions mtdV+
+
+    Returns:
+        dict(dict): { instruction_n : [variables à supprimer]
+    """
+    # on nettoie le fichier pour ne garder que les variables
+    lines = [line.rstrip().split("\t") for line in fichier_tsv if line.rstrip().split("\t")[3] == "variable"]
+
+    # 'dict' contiendra les infos de suppression pour chaque variable
+    dict = {}
+    for line in lines:
+        token, instruction_n, scope_boucle = line[2], line[4], line[7]
+        if token not in dict.keys() and scope_boucle == '-':
+            dict[token] = str(int(instruction_n) + 1)
+        elif token in dict.keys() and scope_boucle == '-':
+            dict[token] = str(int(instruction_n) + 1)
+        elif scope_boucle != '-':
+            dict[token] = scope_boucle
+        else:
+            print("erreur dictionnaire 'dict' dans la fonction suppression variables")
+    
+    # 'suppressions' contiendra les numéros d'instructions où supprimer chaque variable  
+    # c'est le dictionnaire qu'on va utiliser ensuite   
+    suppressions = {}
+    for variable in dict.keys():
+        if dict[variable] not in suppressions.keys():
+            suppressions[dict[variable]] = [variable]
+        else:
+            suppressions[dict[variable]].append(variable)
+
+    return suppressions
+
+
+def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: GestionnaireVariables):
     """lecture du fichier TSV,
     mise à jour des gestionnaires,
     et génération du code machine mtdV
@@ -104,6 +138,7 @@ def lectureTSV(tsv: list, affectations: dict, variables: GestionnaireVariables):
         fichier_tsv (list): fichier tsv avec les instructions mtdV+
         affectations (dict): dictionnaire des affectations, utile pour la mise à jour
                             des gestionnaires
+        suppressions (dict): dictionnaire des suppressions de variables
         variables (GestionnaireVariables) : gestionnaire des noms de variable
     """
 
@@ -113,6 +148,8 @@ def lectureTSV(tsv: list, affectations: dict, variables: GestionnaireVariables):
 
         # s'il s'agit d'une affectation, c'est au tour du groupe 2 et 3 de commencer !
         if line.rstrip().split("\t")[5] == "affectation":
+            
+            # on gère les affectations
             if num_instruction in affectations.keys():
                 # l'instruction n'a pas encore été géré
                 nom_variable = affectations[num_instruction]['G']
@@ -128,6 +165,13 @@ def lectureTSV(tsv: list, affectations: dict, variables: GestionnaireVariables):
                 # maitenant que l'affectation à été gérer par groupe 2 et 3, c'est bon !
                 # on peut supprimer l'entrée dans le dictionnaire d'affectations
                 del affectations[num_instruction]
+                
+            # on gère les suppressions
+            elif num_instruction in suppressions.keys():
+                # il est temps de supprimer la variable car elle n'est utilisée nul part
+                for nom_variable in suppressions[num_instruction]:
+                    # suppression de la variable dans le gestionnaire des noms de variables
+                    variables.deleteVariable(nom_variable)
 
             else:
                 # si c'est une affectation mais que la clé d'instruction n'est plus dans le dictionnaire
@@ -158,14 +202,18 @@ if __name__ == "__main__":
     # informations sur les affectations
     # pour faciliter le travail de lecture du TSV
     affectations = affectations_variables(fichier_tsv)
-    pprint(f'affectations= {affectations}')
+    print("affectations")
+    pprint(affectations)
+    
+    # 'suppressions' est un dictionnaire avec toutes les
+    # informations sur les suppressions de variable
+    # pour faciliter le travail de lecture du TSV
+    suppressions = suppression_variables(fichier_tsv)
+    print("suppressions")
+    pprint(suppressions)
 
     # là ou tout se passe
-    lectureTSV(fichier_tsv, affectations, variables)
-
-    # on vérifie que toutes les variables sont bien dans le dictionnaire
-    print(f'Impression des variables courantes :')
-    variables.printVariables()
+    lectureTSV(fichier_tsv, affectations, suppressions, variables)
 
     # nous avons un module pour effacer complètement
     # ce qu'il y a dans le gestionnaire de noms de variable

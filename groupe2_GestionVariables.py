@@ -76,7 +76,7 @@ class GestionnaireVariables:
             for nom, adresse in self.variables.items():
                 print(f"{nom}: {adresse}")
         else:
-            print("\033[92mLe gestionnaire de noms de variable est actuellement vide.\033[00m")
+            print("\033[92mLe gestionnaire de noms de variable est vide.\033[00m")
 
     def getDict(self) -> dict:
         """retourne le dictionnaire de noms de variable
