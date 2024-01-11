@@ -1,5 +1,0 @@
-token_n	line_n	token	type_token	instruction_n	type_instruction	position_instruction	scope_boucle
-1	1	si (0)	trivial	1	MTdV	-	-
-2	2	fin	trivial	2	MTdV	-	-
-3	2	}	trivial	3	MTdV	-	-
-4	3	#	trivial	4	MTdV	-	-
