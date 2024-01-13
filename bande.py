@@ -1,11 +1,20 @@
 class Bande:
-    def __init__(self, longueur):
+    def __init__(self, longueur: int):
         self.bande = ['0'] * longueur # Initialise la bande avec des espaces vides
         self.position_courante = 0 # Position courante à l'extrême gauche de la bande
         self.nb_variables = 0
+        self.longueur = longueur
+
+    def afficher(self):
+        """
+            Affiche la bande
+        """
+        for baton in self.bande:
+            print(baton, end='')
+        print()
 
     def get_position_courante(self):
-        return self.bande[self.position_courante]
+        return self.position_courante
 
     def lire_position_courante(self) -> int:
         return int(self.bande[self.get_position_courante()])
@@ -24,7 +33,7 @@ class Bande:
         batons = []
         for i in range(32):
             batons.append(self.lire_position_courante())
-            self.se_deplacer('G')
+            self.se_deplacer1('G')
         # convertir le résultat en binaire
         # on ne compte pas le premier et le dernier zéro
         batons = batons[1:-2]
@@ -33,13 +42,15 @@ class Bande:
             resultat += baton * 2**idx
         return resultat
 
-    def ecrire(self, valeur):
+    def ecrire_position_courante(self, valeur):
         """
             Écrit la valeur (0 ou 1) à la position courante
         """
+        #print(self.position_courante)
+        #print(f"nombre de variables : {self.nb_variables}")
         self.bande[self.position_courante] = valeur
 
-    def ecrire(self, variable: int, destination: int):
+    def ecrire(self, valeur: int, destination: int):
         """
             Variable : la valeur à encoder en décimal
             destination = adresse à laquelle on va écrire notre variable
@@ -49,15 +60,21 @@ class Bande:
         # on se déplace sur la bonne adresse + 32 pour écrire de droite à gauche
         self.se_deplacer(destination+32)
         # conversion en binaire
-        binary_representation = bin(variable)[2:]
+        binary_representation = bin(valeur)[2:]
         # on le parcourt à l'envers (de droite à gauche)
         binary_reverse = binary_representation[::-1]
         # on écrit sur la bande
+        self.ecrire_position_courante(0)
+        self.se_deplacer1('G') # écrit le 1er zéro
         for baton in binary_reverse:
-            self.ecrire(int(baton))
-            self.se_deplacer('G')
+            self.ecrire_position_courante(int(baton))
+            self.se_deplacer1('G')
+        # il faut compléter avec des zéros jusqu'au bout
+        for i in range(32-len(binary_reverse)-1):
+            self.ecrire_position_courante(0)
+            self.se_deplacer1('G')
             
-    def se_deplacer(self, direction):
+    def se_deplacer1(self, direction: str):
         if direction == 'D':
             self.position_courante += 1
         elif direction == 'G':
@@ -66,7 +83,9 @@ class Bande:
             raise ValueError("Direction invalide. Doit être soit 'droite', soit 'gauche'.")
        
     def se_deplacer(self, adresse: int):
-        if adresse > self.longueur:
+        #print(f"type de l'adresse : {type(adresse)}")
+        #print(f"type de longueur : {type(self.longueur)}")
+        if adresse > int(self.longueur):
             raise ValueError("L'adresse demandée dépasse la mémoire")
         
         pos_courante = self.lire_position_courante()
@@ -76,8 +95,8 @@ class Bande:
         if distance < 0:
             # on avance, de abs(distance)
             for i in range(abs(distance)):
-                self.se_deplacer('D')
+                self.se_deplacer1('D')
         else:
             # on recule, de abs(distance)
             for i in range(abs(distance)):
-                self.se_deplacer('G')#
+                self.se_deplacer1('G')#
