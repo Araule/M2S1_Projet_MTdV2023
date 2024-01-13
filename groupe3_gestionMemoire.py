@@ -25,35 +25,25 @@ def etatMemoire(input_affectations, input_suppressions):
 
     memoire = defaultdict(int)
 
-    mm = MemoryManager(input_affectations)
-    print("État de la mémoire avant 'exécution' : ")
-    mm.afficher_memoire()
-
     # initialisation de la mémoire, avec les constantes
+    mm = MemoryManager(input_affectations)
+    # copie par valeur, et pas par référence
     memoire[0] = deepcopy(mm.memory)
-    print("Étape 0")
-    for (nom, adresse) in memoire.items():
-            print(f"{nom} : {adresse}")
 
     # calcul de l'indice maximum
     max_step = 0
     for etape in input_suppressions.keys():
         if int(etape) > max_step:
             max_step = int(etape)
-    print("indice max : " + str(max_step))
 
     for i in range(1, max_step+1):
-        print()
-        print(f"Étape n°{i}")
         if str(i) in input_affectations.keys():
-            
             (nom_variable, membre_droite) = (input_affectations[str(i)]['G'], input_affectations[str(i)]['D'])
-            #print(f"membre de gauche : {nom_variable}, membre de droite : {membre_droite}")
 
             membre_droite_ready = False
 
             if membre_droite.isdigit():
-                # c'est une contante, je l'enregistre en mémoire si elle n'existe pas déjà
+                # c'est une contante, elle doit déjà exister en mémoire
                 if mm.isInMemory('CONST_' + str(membre_droite)):
                     membre_droite = mm.bande.lire(mm.memory['CONST_' + str(membre_droite)])
                 else:
@@ -121,39 +111,20 @@ def etatMemoire(input_affectations, input_suppressions):
 
             # Arrivé ici, on devrait avoir un membre de droite valide.
             if not mm.isInMemory(nom_variable):
-                #print(f"Type de nom_variable : {type(nom_variable)}")
-                #print(f"Type de membre_droite : {type(membre_droite)}, valeur = {membre_droite}")
                 mm.add_variable(nom_variable, int(membre_droite))
-                #print("La variable a bien été ajoutée !")
             else:
                 mm.update_variable(nom_variable, int(membre_droite))
-                #print("La variable a bien été mise à jour ! ")
-        
-            #mm.afficher_memoire()
+
         
         elif str(i) in input_suppressions.keys():
             # on supprime les variables demandées
             variables_a_supprimer = input_suppressions[str(i)]
             for var in variables_a_supprimer:
                 mm.delete_variable(var)
-            #mm.afficher_memoire()
         
-            
-
         # fin du tour de boucle, j'enregistre l'état de la mémoire
         memoire[i] = deepcopy(mm.memory)
-        # en fin de boucle, j'affiche le memory manager
-        mm.afficher_memoire()
-        # et la variable mémoire
-        for (nom, adresse) in memoire.items():
-            print(f"{nom} : {adresse}")
     
 
 
     return memoire
-
-mem = etatMemoire(input_affectations, input_suppressions)
-
-for (etape, memoire_) in mem.items():
-    print(f"Étape n°{etape} : ")
-    print(memoire_)
