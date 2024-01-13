@@ -1,10 +1,13 @@
+from typing import Dict
+from copy import deepcopy
 from memory_manager import MemoryManager
+from collections import defaultdict
 
 input_affectations = {    
-    '1': {'D': '0', 'G': 'x'},
-    '2': {'D': 'x + 1', 'G': 'x'},
-    '3': {'D': 'x * 2', 'G': 'y'},
-    '8': {'D': 'y', 'G': 'x'}
+    '1': {'D': '0', 'G': 'x'},              # x = 0
+    '2': {'D': 'x + 1', 'G': 'x'},          # x = x+1
+    '3': {'D': 'x * 2', 'G': 'y'},          # y = x*2
+    '8': {'D': 'y', 'G': 'x'}               # x = y
 }
 
 input_suppressions = {
@@ -20,9 +23,17 @@ def etatMemoire(input_affectations, input_suppressions):
         et constantes en mémoire et leur adresse
     """
 
-    memoire = {}
+    memoire = defaultdict(int)
 
-    mm = MemoryManager()
+    mm = MemoryManager(input_affectations)
+    print("État de la mémoire avant 'exécution' : ")
+    mm.afficher_memoire()
+
+    # initialisation de la mémoire, avec les constantes
+    memoire[0] = deepcopy(mm.memory)
+    print("Étape 0")
+    for (nom, adresse) in memoire.items():
+            print(f"{nom} : {adresse}")
 
     # calcul de l'indice maximum
     max_step = 0
@@ -33,8 +44,9 @@ def etatMemoire(input_affectations, input_suppressions):
 
     for i in range(1, max_step+1):
         print()
+        print(f"Étape n°{i}")
         if str(i) in input_affectations.keys():
-            #print(f"Étape n°{i}")
+            
             (nom_variable, membre_droite) = (input_affectations[str(i)]['G'], input_affectations[str(i)]['D'])
             #print(f"membre de gauche : {nom_variable}, membre de droite : {membre_droite}")
 
@@ -42,12 +54,10 @@ def etatMemoire(input_affectations, input_suppressions):
 
             if membre_droite.isdigit():
                 # c'est une contante, je l'enregistre en mémoire si elle n'existe pas déjà
-                #print("C'est une constante !")
                 if mm.isInMemory('CONST_' + str(membre_droite)):
                     membre_droite = mm.bande.lire(mm.memory['CONST_' + str(membre_droite)])
                 else:
-                    mm.add_constant(int(membre_droite))
-                    membre_droite = mm.bande.lire(mm.memory['CONST_' + str(membre_droite)])
+                    raise ValueError(f"La constante {membre_droite} n'est pas chargée en mémoire")
                 membre_droite_ready = True 
             elif len(membre_droite) == 1:
                 # le membre de droite est une variable, qu'il faut aller lire !
@@ -69,9 +79,7 @@ def etatMemoire(input_affectations, input_suppressions):
                     if mm.isInMemory('CONST_' + terme1):
                         terme1 = mm.readConstant(int(terme1))
                     else:
-                        mm.add_constant(int(terme1))
-                        terme1 = mm.readConstant(int(terme1))
-                    
+                        raise ValueError(f"La constante {terme1} n'existe pas en mémoire.")
                     terme1_ok = True 
                 else:
                     # c'est une variable
@@ -79,16 +87,14 @@ def etatMemoire(input_affectations, input_suppressions):
                         terme1 = mm.readVariable(terme1)
                         terme1_ok = True 
                     else:
-                        print(f"La variable {terme1} n'existe pas en mémoire")
+                        raise ValueError(f"La variable {terme1} n'existe pas en mémoire")
                     
                 if terme2.isdigit():
                     # c'est un constante, il faut aller la lire
                     if mm.isInMemory('CONST_' + terme2):
                         terme2 = mm.readConstant(int(terme2))
                     else:
-                        mm.add_constant(int(terme2))
-                        terme2 = mm.readConstant(int(terme2))
-                    
+                        raise ValueError(f"La constante {terme2} n'existe pas en mémoire.")
                     terme2_ok = True 
                 else:
                     # c'est une variable
@@ -96,7 +102,7 @@ def etatMemoire(input_affectations, input_suppressions):
                         terme2 = mm.readVariable(terme2)
                         terme2_ok = True 
                     else:
-                        print(f"La variable {terme2} n'existe pas en mémoire")
+                        raise ValueError(f"La variable {terme2} n'existe pas en mémoire")
 
                 if terme1_ok and terme2_ok:
                     # on continue, on gère l'opérateur (+ ou *)
@@ -124,21 +130,30 @@ def etatMemoire(input_affectations, input_suppressions):
                 #print("La variable a bien été mise à jour ! ")
         
             #mm.afficher_memoire()
-            memoire[i] = mm.memory
         
         elif str(i) in input_suppressions.keys():
-            #print(f"Étape n°{i}")
             # on supprime les variables demandées
             variables_a_supprimer = input_suppressions[str(i)]
             for var in variables_a_supprimer:
                 mm.delete_variable(var)
             #mm.afficher_memoire()
+        
+            
 
-        else:
-            #print(f"Étape n°{i}")
-            #mm.afficher_memoire()
-            memoire[i] = mm.memory
+        # fin du tour de boucle, j'enregistre l'état de la mémoire
+        memoire[i] = deepcopy(mm.memory)
+        # en fin de boucle, j'affiche le memory manager
+        mm.afficher_memoire()
+        # et la variable mémoire
+        for (nom, adresse) in memoire.items():
+            print(f"{nom} : {adresse}")
     
+
+
     return memoire
 
-#etatMemoire(input_affectations, input_suppressions)
+mem = etatMemoire(input_affectations, input_suppressions)
+
+for (etape, memoire_) in mem.items():
+    print(f"Étape n°{etape} : ")
+    print(memoire_)
