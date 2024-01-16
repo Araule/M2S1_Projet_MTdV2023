@@ -43,7 +43,7 @@ class MemoryManager:
         assert self.bande.nb_variables < 5, "Mémoire pleine, impossible de créer une nouvelle variable"
         
         # sinon ok, on crée cette variable à la fin de la bande
-        destination = self.bande.nb_variables * 32
+        destination = self.bande.nb_variables * 32 + self.bande.nb_constantes * 32
         self.bande.ecrire(valeur, destination)
         self.memory[nom] = destination
         self.bande.nb_variables += 1
@@ -70,6 +70,12 @@ class MemoryManager:
         """
         assert nom in self.memory.keys(), "Cette variable n'existe pas en mémoire"
         return self.memory[nom]
+    
+    def adresse_memoire_vive(self) -> int:
+        """
+            Renvoie l'adresse de la mémoire vive de la bande courante
+        """
+        return self.bande.adresse_memoire_vive()
 
     def initialiser_constantes(self, input_affectations: Dict):
         """

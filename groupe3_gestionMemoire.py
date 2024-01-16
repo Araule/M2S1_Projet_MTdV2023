@@ -125,6 +125,26 @@ def etatMemoire(input_affectations, input_suppressions):
         # fin du tour de boucle, j'enregistre l'état de la mémoire
         memoire[i] = deepcopy(mm.memory)
     
-
-
     return memoire
+
+def adresse_memoire_vive(memoire: Dict[int, Dict[int, int]]) -> Dict[int, int]:
+    """
+        Étant donné l'historique de mémoire instruction par instruction,
+        renvoie l'adresse de la mémoire vive à chaque instruction
+    """
+    memoire_vive = defaultdict(int)
+    for instruction in memoire.keys():
+        # 32 * nombres de variables et constantes
+        adresse_mv = len(memoire[instruction].keys()) * 32
+        memoire_vive[instruction] = adresse_mv
+    return memoire_vive
+
+#etat = etatMemoire(input_affectations, input_suppressions)
+
+#for i in etat.keys():
+#    print(f"Mémoire à l'instruction {i} :")
+#    print(etat[i])
+
+#mv = adresse_memoire_vive(etat)
+#for (i, adresse) in mv.items():
+#    print(f"adresse de la mémoire vive à l'instruction {i} : {adresse}")
