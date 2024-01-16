@@ -77,6 +77,30 @@ def affectations_variables(fichier_tsv: list) -> Dict[str, Dict]:
             print("erreur dictionnaire 'affectations' dans la fonction affectation variables")
 
     return affectations
+    
+def afficher_triviaux(fichier_tsv: list) -> Dict[str, Dict] :
+    """
+    Cette fonction permet d'afficher les instructions triviales du fichier TSV.
+
+    Args:
+        fichier_tsv (list): fichier tsv avec les instructions mtdV+
+    Returns:
+        dict(dict): { instruction_n : { '-' : token }
+    """
+    # nettoyer le fichier pour ne garder que les triviaux
+    lines = [line.rstrip().split("\t") for line in fichier_tsv if line.rstrip().split("\t")[5] == "MTdV"]
+    
+    # 'triviaux' contiendra le caractère trivial et '-' car il n'a pas de position (G,D,M) et sera ignoré
+    triviaux = {}
+    for line in lines:
+    	# récupérer les valeurs depuis leurs colonnes
+        instruction_n, token, position = line[4], line[2], line[6] # position = - (car pas de position)
+        if instruction_n not in triviaux.keys() and position == "-":
+            triviaux[instruction_n] = { '-' : token }
+        else:
+            print("erreur dictionnaire 'triviaux' dans la fonction triviaux variables")
+    
+    return triviaux
 
 # on a essayé de prendre en compte les boucles
 # notre logique n'est peut-être pas parfaite, n'hésitez pas à nous le dire !
@@ -205,6 +229,13 @@ if __name__ == "__main__":
     suppressions = suppression_variables(fichier_tsv)
     print("suppressions")
     pprint(suppressions)
+    
+    # 'triviaux' est un dictionnaire avec toutes les
+    # informations sur les caractères triviaux
+    # pour faciliter le travail de lecture du TSV
+    triviaux = afficher_triviaux(fichier_tsv)
+    print("triviaux")
+    pprint(triviaux)
     
     # initialisation du gestionnaire de mémoires
     memoire = MemoryManager(affectations)
