@@ -4,12 +4,16 @@
 """ 
     Ce que l'on peut ecrire sur le terminal depuis le dossier Projet_MTdV2023 :
     $ python main.py ./TSV/fichier.tsv
+    
+    exemple de fichier écrit par le groupe 2 pour utiliser le gestionnaire de noms de mémoires 
+    pendant la lecture du fichier TSV
 """
 
 from typing import List, Dict
 from pprint import pprint
 from collections import defaultdict
 from groupe2_gestionVariables import GestionnaireVariables
+from memory_manager import MemoryManager
 import os
 import sys
 
@@ -115,7 +119,7 @@ def suppression_variables(fichier_tsv: list) -> Dict[str, Dict]:
     return suppressions
 
 
-def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: GestionnaireVariables):
+def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: GestionnaireVariables, memoire: MemoryManager):
     """lecture du fichier TSV,
     mise à jour des gestionnaires,
     et génération du code machine mtdV
@@ -143,12 +147,12 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
 
                 if not variables.doesVariableExist(nom_variable):
                     # on l'ajoute au gestionnaire de noms de variable
-                    variables.addVariable(nom_variable)
+                    variables.addVariable(nom_variable, memoire.get_adress(nom_variable))
                 else:
                     # la variable existe déjà dans le gestionnaire
-                    pass  # peut-être le groupe 3 veut faire quelque chose ?
+                    pass
 
-                # maitenant que l'affectation a été gérer par groupe 2 et 3, c'est bon !
+                # maitenant que l'affectation a été gérer par groupe 2, c'est bon !
                 # on peut supprimer l'entrée dans le dictionnaire d'affectations
                 del affectations[num_instruction]
                 
@@ -201,9 +205,12 @@ if __name__ == "__main__":
     suppressions = suppression_variables(fichier_tsv)
     print("suppressions")
     pprint(suppressions)
+    
+    # initialisation du gestionnaire de mémoires
+    memoire = MemoryManager(affectations)
 
     # là ou tout se passe
-    lectureTSV(fichier_tsv, affectations, suppressions, variables)
+    lectureTSV(fichier_tsv, affectations, suppressions, variables, memoire)
 
     # nous avons un module pour effacer complètement
     # ce qu'il y a dans le gestionnaire de noms de variable

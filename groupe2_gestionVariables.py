@@ -17,7 +17,7 @@ class GestionnaireVariables:
         """initialisation du gestionnaire de noms de variable"""
         self.variables = {}
 
-    def addVariable(self, nom: str):
+    def addVariable(self, nom: str, adresse: int):
         """ajout de la variable dans le gestionnaire
 
         Args:
@@ -25,9 +25,6 @@ class GestionnaireVariables:
         """
         # si le nom de la variable est autorisé
         if regex.match(r"([a-z]|[A-Z]|_)|([a-z][A-Z][0-9]_)*", nom):
-            # on va d'abord chercher l'adresse de la variable
-            # attente groupe 3
-            adresse = 0
             # on ajoute la variable au gestionnaire avec son adresse
             self.variables[nom] = adresse
         else:
@@ -35,17 +32,16 @@ class GestionnaireVariables:
             print("\033[91mLe nom de variable {} n'est pas autorisé.\033[0m".format(nom)) 
             sys.exit(1)
 
-    def updateAdresse(self, nom: str):
+    def updateAdresse(self, nom: str, adresse: int):
         """mise à jour de l'adresse de la variable dans le gestionnaire
+            peut-être appelé par les fonctions du groupe 3 s'il
+            fait de la relocalisation de mémoire
 
         Args:
             nom (str): nom de la variable
         """
         # si la variable existe dans le gestionnaire
         if nom in self.variables:
-            # on va d'abord chercher l'adresse de la variable
-            # attente groupe 3
-            adresse = 1
             # on met à jour l'adresse de la variable
             self.variables[nom] = adresse
         else:
