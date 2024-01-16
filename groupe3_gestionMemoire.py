@@ -140,6 +140,11 @@ def adresse_memoire_vive(memoire: Dict[int, Dict[int, int]]) -> Dict[int, int]:
     return memoire_vive
 
 #etat = etatMemoire(input_affectations, input_suppressions)
+
+#for i in etat.keys():
+#    print(f"Mémoire à l'instruction {i} :")
+#    print(etat[i])
+
 #mv = adresse_memoire_vive(etat)
 #for (i, adresse) in mv.items():
 #    print(f"adresse de la mémoire vive à l'instruction {i} : {adresse}")

@@ -43,7 +43,7 @@ class MemoryManager:
         assert self.bande.nb_variables < 5, "Mémoire pleine, impossible de créer une nouvelle variable"
         
         # sinon ok, on crée cette variable à la fin de la bande
-        destination = self.bande.nb_variables * 32
+        destination = self.bande.nb_variables * 32 + self.bande.nb_constantes * 32
         self.bande.ecrire(valeur, destination)
         self.memory[nom] = destination
         self.bande.nb_variables += 1
