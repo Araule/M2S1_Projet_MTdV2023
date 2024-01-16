@@ -63,6 +63,13 @@ class MemoryManager:
         # j'écris des 0
         self.bande.ecrire(0, adresse)
         del self.memory[nom]
+    
+    def get_adress(self, nom: str) -> int:
+        """
+            Renvoie l'adresse d'une variable donnée
+        """
+        assert nom in self.memory.keys(), "Cette variable n'existe pas en mémoire"
+        return self.memory[nom]
 
     def initialiser_constantes(self, input_affectations: Dict):
         """
