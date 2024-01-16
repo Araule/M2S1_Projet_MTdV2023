@@ -73,19 +73,23 @@ def revenir_debut_adresse(adresse_variable_actuelle):
 	pos = adresse_variable_actuelle
 	return pos, script
 
+def copie_deux_variables_memoire_vive(adresse_1, adresse_2,adresse_mv, pos):
+	script1 = copie_variable(adresse_1, adresse_mv, pos)
+	pos, script2 = revenir_debut_adresse(adresse_mv)
+	script = script1 + script2
+	adresse_mv_2 = adresse_mv+32
+	script3 = copie_variable(adresse_2, adresse_mv_2, pos)
+	pos, script4 = revenir_debut_adresse(adresse_mv_2)
+	script += script3 + script4
+	script+="\n%On se situe au niveau du 0 d'initialisation de la deuxième variable dans la mémoire vive, donc adresse_memoire_vive + 32"
+	return script, pos
 
 
 if __name__=="__main__":
 	adresse1 = 32
 	adresse2 = 96
 	dest_var_1 = 128
-	dest_var_2 = dest_var_1 + 32
 	pos = 0
-	script1 = copie_variable(adresse1, dest_var_1, pos)
-	pos, script2 = revenir_debut_adresse(dest_var_1)
-	script = script1 + script2
-	script3 = copie_variable(adresse2, dest_var_2, pos)
-	pos, script4 = revenir_debut_adresse(dest_var_2)
-	script += script3 + script4
-	script+="\n%On se situe au niveau du 0 d'initialisation de la deuxième variable dans la mémoire vive, donc adresse_memoire_vive + 32"
+	script, pos = copie_deux_variables_memoire_vive(adresse1, adresse2, dest_var_1, pos)
 	print(script)
+	print(f"\n\nposition actuelle : {pos}")
