@@ -32,4 +32,4 @@ Journée de travail en groupe
 	- une fonction `copie_variable(adresse_A, adresse_B, pos)` permettant de copier le contenu d'une adresse A à l'adresse B en fonction de la position actuelle de notre tête de bande.
 	- une fonction `revenir_debut_adresse()` permettant de revenir à la position initiale de la variable dans laquelle on se trouve pour retrouver la position de la tête de la bande, peu importe la valeur stockée dans la variable.
 	- une fonction `copie_deux_variables_memoire_vive()` utilisant les deux fonctions précédentes et permettant de copier deux variables dans la mémoire vive. À la fin de celle-ci, on se trouve à la position initiale de la **deuxième** valeur écrite dans la mémoire vive.
-
+- Création d'une fonction `nettoyage_mv()` pour nettoyer la mémoire vive une fois que l'opération a été effectuée et le résultat copié à l'adresse voulue.
