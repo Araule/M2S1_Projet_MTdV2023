@@ -84,12 +84,29 @@ def copie_deux_variables_memoire_vive(adresse_1, adresse_2,adresse_mv, pos):
 	script+="\n%On se situe au niveau du 0 d'initialisation de la deuxième variable dans la mémoire vive, donc adresse_memoire_vive + 32"
 	return script, pos
 
+def nettoyage_mv(adresse_mv, pos):
+	script = "\n%On était au niveau du 0 initialisant la variable qui a été copiée à partir de la mémoire vive.\n%La mémoire vive se situant à la fin de la bande, pos < adresse_mv. On se place au début de la mémoire vive\n"
+	distance = adresse_mv - pos
+	script+="D " * distance
+	script+="\n\n%Il ne reste qu'une valeur dans la mémoire vive, placée au début.\n"
+	script+="\n%On efface la mémoire du dernier bâton au premier pour connaître la position de la tête de bande à la fin.\n%On commence donc par chercher la fin de la valeur."
+	script+="\nboucle\n\tD\n\tsi(0) fin }\n}"
+	script+="\n\n%On est maintenant au niveau du 0 clôturant la valeur."
+	script+="\nG "
+	script+="\n\n%On est maintenant au niveau du dernier 1 de la valeur."
+	script+="\nboucle\n\tsi(1) 0 G }\n\tsi (0) fin }\n}"
+	pos = adresse_mv
+	return script, pos
+
 
 if __name__=="__main__":
 	adresse1 = 32
 	adresse2 = 96
 	dest_var_1 = 128
 	pos = 0
-	script, pos = copie_deux_variables_memoire_vive(adresse1, adresse2, dest_var_1, pos)
+	# script, pos = copie_deux_variables_memoire_vive(adresse1, adresse2, dest_var_1, pos)
+	script, pos = nettoyage_mv(dest_var_1, pos)
 	print(script)
-	print(f"\n\nposition actuelle : {pos}")
+	print(pos)
+	# print(script)
+	# print(f"\n\nposition actuelle : {pos}")
