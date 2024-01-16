@@ -13,7 +13,7 @@ from typing import List, Dict
 from pprint import pprint
 from collections import defaultdict
 from groupe2_gestionVariables import GestionnaireVariables
-from memory_manager import MemoryManager
+from groupe3_gestionMemoire import etatMemoire
 import os
 import sys
 
@@ -119,7 +119,7 @@ def suppression_variables(fichier_tsv: list) -> Dict[str, Dict]:
     return suppressions
 
 
-def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: GestionnaireVariables, memoire: MemoryManager):
+def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: GestionnaireVariables, hist_memoire: dict):
     """lecture du fichier TSV,
     mise à jour des gestionnaires,
     et génération du code machine mtdV
@@ -147,7 +147,11 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
 
                 if not variables.doesVariableExist(nom_variable):
                     # on l'ajoute au gestionnaire de noms de variable
-                    variables.addVariable(nom_variable, memoire.get_adress(nom_variable))
+                    adresse = hist_memoire[int(num_instruction)][nom_variable]
+                    variables.addVariable(nom_variable, adresse)
+                    
+                    print("pour instruction", num_instruction, ", le gestionnaire de noms de variable est:")
+                    variables.printVariables()
                 else:
                     # la variable existe déjà dans le gestionnaire
                     pass
@@ -162,6 +166,9 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                 for nom_variable in suppressions[num_instruction]:
                     # suppression de la variable dans le gestionnaire des noms de variables
                     variables.deleteVariable(nom_variable)
+                    
+                    print("pour instruction", num_instruction, ", le gestionnaire de noms de variable est:")
+                    variables.printVariables()
                 
                 # maitenant que la suppression a été gérer par groupe 2 et 3, c'est bon !
                 # on peut supprimer l'entrée dans le dictionnaire de suppressions
@@ -206,11 +213,11 @@ if __name__ == "__main__":
     print("suppressions")
     pprint(suppressions)
     
-    # initialisation du gestionnaire de mémoires
-    memoire = MemoryManager(affectations)
+    # historique de la mémoire
+    hist_memoire = etatMemoire(affectations, suppressions)
 
     # là ou tout se passe
-    lectureTSV(fichier_tsv, affectations, suppressions, variables, memoire)
+    lectureTSV(fichier_tsv, affectations, suppressions, variables, hist_memoire)
 
     # nous avons un module pour effacer complètement
     # ce qu'il y a dans le gestionnaire de noms de variable
