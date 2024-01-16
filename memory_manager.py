@@ -70,6 +70,12 @@ class MemoryManager:
         """
         assert nom in self.memory.keys(), "Cette variable n'existe pas en mémoire"
         return self.memory[nom]
+    
+    def adresse_memoire_vive(self) -> int:
+        """
+            Renvoie l'adresse de la mémoire vive de la bande courante
+        """
+        return self.bande.adresse_memoire_vive()
 
     def initialiser_constantes(self, input_affectations: Dict):
         """
