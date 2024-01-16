@@ -15,6 +15,7 @@ from pprint import pprint
 from collections import defaultdict
 from groupe2_gestionVariables import GestionnaireVariables
 from groupe3_gestionMemoire import etatMemoire
+from groupe3_gestionMemoire import adresse_memoire_vive
 import os
 import sys
 
@@ -144,7 +145,7 @@ def suppression_variables(fichier_tsv: list) -> Dict[str, Dict]:
     return suppressions
 
 
-def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: GestionnaireVariables, hist_memoire: dict):
+def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: GestionnaireVariables, hist_memoire: dict, adresse_memoire_vive: dict):
     """lecture du fichier TSV,
     mise à jour des gestionnaires,
     et génération du code machine mtdV
@@ -263,6 +264,9 @@ if __name__ == "__main__":
     
     # historique de la mémoire
     hist_memoire = etatMemoire(affectations, suppressions)
+    
+    # adresse de la mémoire vive
+    adresse_memoire_vive = adresse_memoire_vive(hist_memoire)
 
     # là ou tout se passe
     lectureTSV(fichier_tsv, affectations, suppressions, variables, hist_memoire)
