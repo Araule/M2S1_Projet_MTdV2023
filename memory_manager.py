@@ -1,6 +1,4 @@
 from typing import Dict, List
-from constante import Constante 
-from variable import Variable
 from bande import Bande
 
 class MemoryManager:
