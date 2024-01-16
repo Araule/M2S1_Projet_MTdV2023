@@ -27,4 +27,9 @@ Nous nous sommes rencontrés pour faire un point sur ce que nous devions faire p
 ## 16/01/24
 Journée de travail en groupe
 **Agathe** :
+- Pour copier deux variables au niveau de la mémoire vive, comme la mémoire vive est largement plus grande que la taille d'une adresse de variable ou de constante, et que les scripts addition et multiplication peuvent s'appliquer même qd on a plus de deux 0 entre les deux variables, on a simplement copié la seconde variable à `adresse_memoire_vive+32`
+- On a maintenant :
+	- une fonction `copie_variable(adresse_A, adresse_B, pos)` permettant de copier le contenu d'une adresse A à l'adresse B en fonction de la position actuelle de notre tête de bande.
+	- une fonction `revenir_debut_adresse()` permettant de revenir à la position initiale de la variable dans laquelle on se trouve pour retrouver la position de la tête de la bande, peu importe la valeur stockée dans la variable.
+	- une fonction `copie_deux_variables_memoire_vive()` utilisant les deux fonctions précédentes et permettant de copier deux variables dans la mémoire vive. À la fin de celle-ci, on se trouve à la position initiale de la **deuxième** valeur écrite dans la mémoire vive.
 
