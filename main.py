@@ -1,5 +1,6 @@
 #!/bin/python3
 # -*- coding: utf-8 -*-
+import os
 
 """ 
     Ce que l'on peut ecrire sur le terminal depuis le dossier Projet_MTdV2023 :
@@ -155,6 +156,11 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
         suppressions (dict): dictionnaire des suppressions de variables
         variables (GestionnaireVariables) : gestionnaire des noms de variable
     """
+    # ouvrir le fichier output
+    output_file = os.path.basename(sys.argv[1].split(".")[0] + ".TS")
+    #print(output_file)
+    output_file = open(output_file, "w", encoding="ASCII")
+
 
     for line in tsv:
         # 'num_instruction' (str) correspond à 'instruction_n' dans le fichier tsv
@@ -203,9 +209,20 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                 # ça veut dire que l'affectation a déjà été géré
                 pass  # peut-être que le groupe 4 a besoin de faire quelque chose ici ?
 
+        # s'il s'agit d'un trivial, on va l'écrire dans le fichier output
+        elif line.rstrip().split("\t")[5] == "MTdV" and line.rstrip().split("\t")[3] == "trivial":
+            # on récupère le caractère trivial
+            trivial = line.rstrip().split("\t")[2]
+            # on l'écrit dans le fichier output 
+            # le output prend le nom du fichier en input mais avec l'extension .TS
+            output_file.write(trivial + "\n")
+            
+
         # s'il ne s'agit pas d'une affectation, pas de modification au niveau du gestionnaire de noms de variable
         else:
             pass  # peut-être qu'un autre groupe veut faire quelque chose ?
+
+    output_file.close()
 
 
 if __name__ == "__main__":
