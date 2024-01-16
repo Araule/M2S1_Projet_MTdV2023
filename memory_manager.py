@@ -3,19 +3,12 @@ from constante import Constante
 from variable import Variable
 from bande import Bande
 
-# 0 à 9 -> 10 constantes
-# on met 6 variables
-# 1/3 variable, 2/3 mémoire vive
-# 16*32 = 512
-# 1024 pour la mémoire vive
-# taille totale : 1536
-
-# on doit récupérer les constantes du programme
-
-# le nombre de variables aussi
-
 class MemoryManager:
     def __init__(self):
+        """
+            Constructeur par défaut. Si on ne fournit pas de dictionnaire des affectations,
+            on remplit les premières cases de la mémoire avec les constantes de 0 à 9
+        """
         self.memory = {} # nom -> adresse
         self.bande = Bande(3200)
         # on met tout de suite les constantes
@@ -23,6 +16,10 @@ class MemoryManager:
             self.bande.add_constant(i)
     
     def __init__(self, input_affectations: Dict):
+        """
+            Constructeur avec dictionnaire des affectations du groupe 2
+            initialise les constantes en mémoire
+        """
         self.memory = {} # nom -> adresse
         self.bande = Bande(3200)
         # on met tout de suite les constantes
@@ -36,23 +33,22 @@ class MemoryManager:
             raise ValueError(f"La constante existe déjà : {nom_constante} à l'adresse {self.memory[nom_constante]}.")
         # sinon ok, on écrit la constante en mémoire
         # on se place au bout de la bande
-        destination = self.bande.nb_variables * 32
+        destination = self.bande.nb_constantes * 32
         self.bande.ecrire(valeur, destination)
         self.memory[nom_constante] = destination
-        self.bande.nb_variables += 1
-        #print("La constante a bien été ajoutée.")
+        self.bande.nb_constantes += 1
     
     def add_variable(self, nom: str, valeur: int):
         # ajoute une variable dans la mémoire
         if nom in self.memory.keys():
             raise ValueError(f"La variable existe déjà : {nom} à l'adresse {self.memory[nom]}. Utilisez plutôt update_variable().")
+        assert self.bande.nb_variables < 5, "Mémoire pleine, impossible de créer une nouvelle variable"
         
         # sinon ok, on crée cette variable à la fin de la bande
         destination = self.bande.nb_variables * 32
         self.bande.ecrire(valeur, destination)
         self.memory[nom] = destination
         self.bande.nb_variables += 1
-        #print("La variable a bien été ajoutée.")
 
     def update_variable(self, nom: str, valeur: int):
         # il faut que la variable soit dans la mémoire
@@ -66,7 +62,7 @@ class MemoryManager:
     def delete_variable(self, nom: str):
         # Je vais à son adresse
         adresse = self.readVariable(nom)
-        # j'écris que des 0
+        # j'écris des 0
         self.bande.ecrire(0, adresse)
         del self.memory[nom]
 
@@ -91,18 +87,27 @@ class MemoryManager:
                     constantes.append(int(terme1))
                 if terme2.isdigit():
                     constantes.append(int(terme2))
-                    
+        # on écrit les constantes récupérées
         for c in constantes:
             self.add_constant(c)
 
     def isInMemory(self, nom_variable: str) -> bool:
+        """
+            Vérifie si une variable est présente en mémoire
+        """
         return nom_variable in self.memory.keys()
     
     def readVariable(self, nom_variable: str) -> int:
+        """
+            Renvoie la valeur d'une variable à partir de son nom
+        """
         adresse = self.memory[nom_variable]
         return self.bande.lire(adresse)
 
     def readConstant(self, valeur: int) -> int:
+        """
+            Renvoie la valeur d'une constante à partir de sa valeur
+        """
         nom_constante = 'CONST_' + str(valeur)
         adresse = self.memory[nom_constante]
         return self.bande.lire(adresse)
@@ -113,3 +118,12 @@ class MemoryManager:
         """
         for (nom_var, adresse) in self.memory.items():
             print(f"{nom_var} : adresse {adresse}")
+
+    def adresse_memoire_vive(self) -> int:
+        """
+            Renvoie l'adresse du point de départ de la mémoire vive
+        """
+        # on passe les constantes et les variables
+        return self.bande.nb_constantes * 32 + self.bande.nb_variables * 32
+    
+    
