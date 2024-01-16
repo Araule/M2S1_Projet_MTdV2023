@@ -3,9 +3,6 @@
 
 """ Gestionnaire de noms de variable pour programme MdtV+ au format de dictionnaire
     Le fichier contient la classe et ses méthodes
-    
-    Pour le groupe 3 et 4 : n'hésitez pas à nous contacter si vous avez besoin 
-    d'une nouvelle méthode ou si vous avez besoin que l'on modifie une déjà existante
 """
 
 import regex
