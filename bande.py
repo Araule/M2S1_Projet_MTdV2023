@@ -2,7 +2,8 @@ class Bande:
     def __init__(self, longueur: int):
         self.bande = ['0'] * longueur # Initialise la bande avec des espaces vides
         self.position_courante = 0 # Position courante à l'extrême gauche de la bande
-        self.nb_variables = 0
+        self.nb_variables = 0   # on s'autorise au maximum 5 variables
+        self.nb_constantes = 0
         self.longueur = longueur
 
     def afficher(self):
@@ -83,15 +84,10 @@ class Bande:
             raise ValueError("Direction invalide. Doit être soit 'droite', soit 'gauche'.")
        
     def se_deplacer(self, adresse: int):
-        #print(f"type de l'adresse : {type(adresse)}")
-        #print(f"type de longueur : {type(self.longueur)}")
         if adresse > int(self.longueur):
             raise ValueError("L'adresse demandée dépasse la mémoire")
-        
         pos_courante = self.lire_position_courante()
-
         distance = pos_courante - adresse
-
         if distance < 0:
             # on avance, de abs(distance)
             for i in range(abs(distance)):
@@ -100,3 +96,13 @@ class Bande:
             # on recule, de abs(distance)
             for i in range(abs(distance)):
                 self.se_deplacer1('G')#
+    
+    def inverser_ecriture(self):
+        """
+            Inverse le sens d'écriture des variables et constantes
+            par exemple : 0000110 -> 0110000
+        """
+        for i in range(0, self.nb_constantes + self.nb_variables, 32):
+            # pour chaque variable, on inverse
+            self.bande[i:i+31] = self.bande[i:i+31:-1]
+        
