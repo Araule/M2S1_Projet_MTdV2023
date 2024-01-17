@@ -61,7 +61,7 @@ def copie_variable(adresse_provenance: int, adresse_destination: int, pos: int) 
         pos += (dep_adr_prov_adr_dest)
         script+="\n 0 fin }\n}"
     script+="\n\n%On est sur le 0 qui \"ferme\" la valeur de notre variable. On doit retourner au début de l'adresse pour savoir où on se trouve sur la bande."
-    return script, pos
+    return script
 
 def revenir_debut_adresse(adresse_variable_actuelle):
     script = ""

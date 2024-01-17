@@ -215,7 +215,9 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                         adresse_provenance = hist_memoire[int(num_instruction)][source]
                     
                     # on copie ce qu'il y a dans l'adresse_provenance dans l'adresse destination
-                    script, position = g4.copie_variable(adresse_provenance, adresse_destination, position)
+                    script= g4.copie_variable(adresse_provenance, adresse_destination, position)
+                    output_file.write(script)
+                    script, position = g4.revenir_debut_adresse(adresse_destination)
                     output_file.write(script)
                 else:
                     source = affectations[num_instruction]['D']
@@ -236,7 +238,9 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                             adresse2 = hist_memoire[int(num_instruction)][composant2]
                         script, position = g4.addition(adresse1, adresse2, position, adresse_memoire_vive[int(num_instruction)])
                         output_file.write(script)
-                        script, position = g4.copie_variable(adresse_memoire_vive[int(num_instruction)], adresse_destination, position)
+                        script = g4.copie_variable(adresse_memoire_vive[int(num_instruction)], adresse_destination, position)
+                        output_file.write(script)
+                        script, position = g4.revenir_debut_adresse(adresse_destination)
                         output_file.write(script)
                         script, position = g4.nettoyage_mv(adresse_memoire_vive[int(num_instruction)], position)
                         output_file.write(script)
@@ -253,6 +257,14 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                         except KeyError:
                             composant2 = "CONST_" + composant2
                             adresse2 = hist_memoire[int(num_instruction)][composant2]
+                        script, position = g4.multiplication(adresse1, adresse2, position, adresse_memoire_vive[int(num_instruction)])
+                        output_file.write(script)
+                        script = g4.copie_variable(adresse_memoire_vive[int(num_instruction)], adresse_destination, position)
+                        output_file.write(script)
+                        script, position = g4.revenir_debut_adresse(adresse_destination)
+                        output_file.write(script)
+                        script, position = g4.nettoyage_mv(adresse_memoire_vive[int(num_instruction)], position)
+                        output_file.write(script)
                     else:
                         print("Opérateur inconnu ou format d'encodage inconnu...")
 
