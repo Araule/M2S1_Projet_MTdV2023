@@ -163,7 +163,7 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
     with open(f"ts_generes/{output_file}", "w", encoding="utf-8") as output_file:
 
         position = 0
-
+        premiere_ecriture = True
         for line in tsv:
             # 'num_instruction' (str) correspond à 'instruction_n' dans le fichier tsv
             token = line.rstrip().split("\t")[2]
@@ -215,7 +215,12 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                         
                         # on copie ce qu'il y a dans l'adresse_provenance dans l'adresse destination
                         script= g4.copie_variable(adresse_provenance, adresse_destination, position)
-                        output_file.write(script)
+                        # On retire le premier passage à la ligne si rien n'a encore été écrit dans le fichier poour ne pas poser de problème au moment de la compilation du script .ts
+                        if premiere_ecriture and script[0] == "\n":
+                            output_file.write(script[1:])
+                            premiere_ecriture = False
+                        else : 
+                            output_file.write(script)
                         script, position = g4.revenir_debut_adresse(adresse_destination)
                         output_file.write(script)
                     else:
@@ -236,7 +241,11 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                                 composant2 = "CONST_" + composant2
                                 adresse2 = hist_memoire[int(num_instruction)][composant2]
                             script, position = g4.addition(adresse1, adresse2, position, adresse_memoire_vive[int(num_instruction)])
-                            output_file.write(script)
+                            if premiere_ecriture and script[0] == "\n":
+                                output_file.write(script[1:])
+                                premiere_ecriture = False
+                            else : 
+                                output_file.write(script)
                             script = g4.copie_variable(adresse_memoire_vive[int(num_instruction)], adresse_destination, position)
                             output_file.write(script)
                             script, position = g4.revenir_debut_adresse(adresse_destination)
@@ -257,7 +266,11 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                                 composant2 = "CONST_" + composant2
                                 adresse2 = hist_memoire[int(num_instruction)][composant2]
                             script, position = g4.multiplication(adresse1, adresse2, position, adresse_memoire_vive[int(num_instruction)])
-                            output_file.write(script)
+                            if premiere_ecriture and script[0] == "\n":
+                                output_file.write(script[1:])
+                                premiere_ecriture = False
+                            else : 
+                                output_file.write(script)
                             script = g4.copie_variable(adresse_memoire_vive[int(num_instruction)], adresse_destination, position)
                             output_file.write(script)
                             script, position = g4.revenir_debut_adresse(adresse_destination)
@@ -316,7 +329,11 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                 # print(num_instruction)
                 # print(hist_memoire[int(num_instruction)])
                     script, position = g4.comparaison(adresse1, adresse2, position)
-                    output_file.write(script)
+                    if premiere_ecriture and script[0] == "\n":
+                        output_file.write(script[1:])
+                        premiere_ecriture = False
+                    else : 
+                        output_file.write(script)
 
 
 
