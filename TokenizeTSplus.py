@@ -2,41 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-	conseil Laura 1 : dans ce commentaire, il serait bien de rajouter un petit résumé du fichier à rajouter pour savoir ce qu'il fait et par quel fichier python il est appelé
-	conseil Laura 2 : en dessous, dans les fonctions, il serait bien de rajouter les informations (type, résumé, ect..) des fonctions
+	Fichier qui a des fonctions de nettoyage, de tokenisation et de vérification de fichiers MTdV+.
+	Affiche une erreur et quitte le programme en cas de syntaxe invalide du programme MTdV+.
+	Crée une liste de tokens avec les informations nécessaires aux étapes de compilation de MTdV+ en MTdV.
+	Appelé par analyseurSyntaxique.py.
  
-	Laura peut-être "bug" trouvé 1 : 
-				=> ce qui est écrit sur mon terminal
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:35: SyntaxWarning: invalid escape sequence '\('
-				line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:38: SyntaxWarning: invalid escape sequence '\*'
-				line = regex.sub("\*", " * ", line)
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:39: SyntaxWarning: invalid escape sequence '\+'
-				line = regex.sub("\+", " + ", line)
-    Laura même "bug" : 
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:4: SyntaxWarning: invalid escape sequence '\('
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:44: SyntaxWarning: invalid escape sequence '\('
-				line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:47: SyntaxWarning: invalid escape sequence '\*'
-				line = regex.sub("\*", " * ", line)
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:48: SyntaxWarning: invalid escape sequence '\+'
-				line = regex.sub("\+", " + ", line)
-    encore 3 :
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:4: SyntaxWarning: invalid escape sequence '\('
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:53: SyntaxWarning: invalid escape sequence '\('
-				line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:56: SyntaxWarning: invalid escape sequence '\*'
-				line = regex.sub("\*", " * ", line)
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:57: SyntaxWarning: invalid escape sequence '\+'
-				line = regex.sub("\+", " + ", line)
-	encore 4 :
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:4: SyntaxWarning: invalid escape sequence '\('
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:59: SyntaxWarning: invalid escape sequence '\('
-				line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:62: SyntaxWarning: invalid escape sequence '\*'
-				line = regex.sub("\*", " * ", line)
-				/home/laura/Documents/Projet_MTdV2023/groupe1_TokenizeTSplus.py:63: SyntaxWarning: invalid escape sequence '\+'
-				line = regex.sub("\+", " + ", line)
 """
 
 import regex
@@ -53,7 +23,7 @@ def clean_lines(text: str):
 		text (str): _description_
 
 	Returns:
-		_type_: renvoie les lignes de code avec leur numéro de lignes associées
+		list, list: renvoie les lignes de code avec leur numéro de lignes associées
 	"""
  
 	# split lines
@@ -88,13 +58,14 @@ def make_tokens(lines: List[str], lines_number: List[int]) -> list:
 	"""
 	La fonction coupe les lignes en tokens 
  	(token, line_number, instruction_number)
+	et ajoute des informations sur chaque token.
 
 	Args:
 		lines (List[str]): _description_
 		lines_number (List[int]): _description_
 
 	Returns:
-		list: _description_
+		list: Liste des tokens avec: numéro de ligne, token, type_toke, numéro d'instruction, type de l'instruction, position dans l'opération.
 	"""
 
 	tokens = []
@@ -340,9 +311,12 @@ def check_structure(tokens, stack=[], old_tokens=[]):
 	"""
 	La fonction check_structure va vérifier la bonne correspondance entre
 	les mots-clé si, boucle, fin, } et l'utilisation de # (fin du programme).
+	Si un token se trouve dans une boucle, ajoute une valeur de scope_boucle à ce token,
+	qui correspond à la fin de toutes les boucles dans lequel le token se trouve.
+	Ce paramètre sert à savoir quand une variable cesse d'exister.
 
 	Args:
-		tokens (_type_): la liste des tokens avec toutes leurs informations, 
+		tokens (list): la liste des tokens avec toutes leurs informations, 
   						qui a été générée par la fonction make_tokens
 		stack (list, optional): les tokens de type boucle, si (0), si (1) et si, 
   							qui s'empilent et se dépilent au fur et à mesure qu'on les rencontre,
@@ -350,7 +324,7 @@ def check_structure(tokens, stack=[], old_tokens=[]):
 		old_tokens (list, optional): les tokens déjà traités. Defaults to [].
 
 	Returns:
-		_type_: _description_
+		list: la liste des tokens avec l'ajout d'une colonne scope_boucle pour les tokens dans une boucle.
 	"""
 
 	token = next_token(tokens, old_tokens)
@@ -418,12 +392,32 @@ def check_structure(tokens, stack=[], old_tokens=[]):
 
 
 def next_token(tokens, old_tokens):
+	"""
+	Dépile et renvoie le prochain token de la liste de tokens. Empile celui-ci à old_tokens.
+
+	Args:
+		tokens (list): la liste des tokens avec toutes leurs informations, 
+  						qui a été générée par la fonction make_tokens
+		old_tokens (list, optional): les tokens déjà traités. Defaults to [].
+	Returns:
+		token (list): le token suivant.
+	"""
 	token = tokens.pop(0) # On dépile le prochain token
 	old_tokens.append(token) # On empile les tokens déjà traités
 	return token
 
 
 def erreur(erreur_str, token="", line_n="", line="", token_n=""):
+	"""
+	Affiche une erreur et quitte le programme.
+
+	Args:
+		erreur_str (str): le message d'erreur.
+		token (str, optional): le token sur lequel l'erreur se produit.
+		line_n (int, optional): le numéro de ligne où l'erreur se produit.
+		line (str, optional): la ligne complète où l'erreur se produit.
+		token_n (int, optional): l'indice du token dans la ligne.
+	"""
 	print("\033[91m", end="") # Met les prochains prints en rouge
 	print(erreur_str)
 	if line_n or line or token:
@@ -441,6 +435,15 @@ def erreur(erreur_str, token="", line_n="", line="", token_n=""):
 
 
 def warning(warning_str, token="", line_n="", line=""):
+	"""
+	Affiche un avertissement.
+
+	Args:
+		warning_str (str): le message d'avertissement
+		token (str, optional): le token sur lequel l'erreur se produit.
+		line_n (int, optional): le numéro de ligne où l'erreur se produit.
+		line (str, optional): la ligne complète où l'erreur se produit.
+	"""
 	print("\033[93m", end="") # Met les prochains prints en jaune
 	print(warning_str)
 	if line_n:
