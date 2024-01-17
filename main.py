@@ -10,15 +10,16 @@ import os
     pendant la lecture du fichier TSV
 """
 
+import os
+import sys
+import regex
 from typing import List, Dict
 from pprint import pprint
 from collections import defaultdict
 from groupe2_gestionVariables import GestionnaireVariables
 from groupe3_gestionMemoire import etatMemoire
 from groupe3_gestionMemoire import adresse_memoire_vive
-import os
-import sys
-
+import scripts.groupe4_generationScriptMTdV as g4
 
 def getTSV(path: str) -> List[str]:
     """verifie que le chemin est correcte
@@ -160,18 +161,28 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
     # ouvrir le fichier output
     output_file = os.path.basename(sys.argv[1].split(".")[0] + ".TS")
     #print(output_file)
-    output_file = open(output_file, "w", encoding="ASCII")
+    output_file = open(output_file, "w", encoding="utf-8")
 
+    position = 0
 
     for line in tsv:
         # 'num_instruction' (str) correspond à 'instruction_n' dans le fichier tsv
+        token = line.rstrip().split("\t")[2]
+        type_token = line.rstrip().split("\t")[3]
         num_instruction = line.rstrip().split("\t")[4]
+        type_instruction = line.rstrip().split("\t")[5]
+        position_instruction = line.rstrip().split("\t")[6]
+        
+        # print(type_token, num_instruction, type_instruction, position_instruction)
+        # print(affectations)
+        # print(suppressions)
 
         # s'il s'agit d'une affectation, c'est au tour du groupe 2 et 3 de commencer !
-        if line.rstrip().split("\t")[5] == "affectation":
-            
+        if type_instruction == "affectation":
+            # nom_variable = affectations[num_instruction]['G']
             # on gère les affectations
             if num_instruction in affectations.keys():
+                # print(affectations)
                 # l'instruction n'a pas encore été géré
                 nom_variable = affectations[num_instruction]['G']
                 # vérifier si la variable n'existe pas
@@ -181,11 +192,71 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                     adresse = hist_memoire[int(num_instruction)][nom_variable]
                     variables.addVariable(nom_variable, adresse)
                     
-                    print("pour instruction", num_instruction, ", le gestionnaire de noms de variable est:")
-                    variables.printVariables()
+                    # print("pour instruction", num_instruction, ", le gestionnaire de noms de variable est:")
+                    # variables.printVariables()
+                    # print(hist_memoire)
+                    # print("hoho")
                 else:
                     # la variable existe déjà dans le gestionnaire
                     pass
+
+                adresse_destination = variables.getAdresse(nom_variable)
+                
+                # on est dans une affectation de constante ou de variable simple (ex : x = 1 ou x = y) 
+                if len(affectations[num_instruction]['D']) == 1:
+                    source = affectations[num_instruction]['D']
+                    
+                    # pour le cas où la source est une variable déjà dans la mémoire
+                    try:
+                        adresse_provenance = hist_memoire[int(num_instruction)][source]
+                    # pour le cas où la source est une constante
+                    except KeyError:
+                        source = "CONST_" + source
+                        adresse_provenance = hist_memoire[int(num_instruction)][source]
+                    
+                    # on copie ce qu'il y a dans l'adresse_provenance dans l'adresse destination
+                    script, position = g4.copie_variable(adresse_provenance, adresse_destination, position)
+                    output_file.write(script)
+                else:
+                    source = affectations[num_instruction]['D']
+                    objet_addition = regex.match(r'(.) \+ (.)', source)
+                    objet_multiplication = regex.match(r'(.) \* (.)', source)
+                    if objet_addition:
+                        composant1 = objet_addition.group(1)
+                        composant2 = objet_addition.group(2)
+                        try:
+                            adresse1 = hist_memoire[int(num_instruction)][composant1]
+                        except KeyError:
+                            composant1 = "CONST_" + composant1
+                            adresse1 = hist_memoire[int(num_instruction)][composant1]
+                        try:
+                            adresse2 = hist_memoire[int(num_instruction)][composant2]
+                        except KeyError:
+                            composant2 = "CONST_" + composant2
+                            adresse2 = hist_memoire[int(num_instruction)][composant2]
+                        script, position = g4.addition(adresse1, adresse2, position, adresse_memoire_vive[int(num_instruction)])
+                        output_file.write(script)
+                        script, position = g4.copie_variable(adresse_memoire_vive[int(num_instruction)], adresse_destination, position)
+                        output_file.write(script)
+                        script, position = g4.nettoyage_mv(adresse_memoire_vive[int(num_instruction)], position)
+                        output_file.write(script)
+                    elif objet_multiplication:
+                        composant1 = objet_multiplication.group(1)
+                        composant2 = objet_multiplication.group(2)
+                        try:
+                            adresse1 = hist_memoire[int(num_instruction)][composant1]
+                        except KeyError:
+                            composant1 = "CONST_" + composant1
+                            adresse1 = hist_memoire[int(num_instruction)][composant1]
+                        try:
+                            adresse2 = hist_memoire[int(num_instruction)][composant2]
+                        except KeyError:
+                            composant2 = "CONST_" + composant2
+                            adresse2 = hist_memoire[int(num_instruction)][composant2]
+                    else:
+                        print("Opérateur inconnu ou format d'encodage inconnu...")
+
+
 
                 # maitenant que l'affectation a été gérer par groupe 2, c'est bon !
                 # on peut supprimer l'entrée dans le dictionnaire d'affectations
@@ -198,7 +269,7 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                     # suppression de la variable dans le gestionnaire des noms de variables
                     variables.deleteVariable(nom_variable)
                     
-                    print("pour instruction", num_instruction, ", le gestionnaire de noms de variable est:")
+                    # print("pour instruction", num_instruction, ", le gestionnaire de noms de variable est:")
                     variables.printVariables()
                 
                 # maitenant que la suppression a été gérer par groupe 2 et 3, c'est bon !
@@ -210,18 +281,48 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                 # ça veut dire que l'affectation a déjà été géré
                 pass  # peut-être que le groupe 4 a besoin de faire quelque chose ici ?
 
+        elif type_instruction == "test":
+            if type_token == "complexe":
+                str_test = ""
+                continue
+            str_test += token
+            if position_instruction == 'D':
+                objet_comparaison = regex.match(r'(.)==(.)', source)
+                if objet_comparaison:
+                    composant1 = objet_comparaison.group(1)
+                    composant2 = objet_comparaison.group(2)
+                    try:
+                        adresse1 = hist_memoire[int(num_instruction)][composant1]
+                    except KeyError:
+                        composant1 = "CONST_" + composant1
+                        adresse1 = hist_memoire[int(num_instruction)][composant1]
+                    try:
+                        adresse2 = hist_memoire[int(num_instruction)][composant2]
+                    except KeyError:
+                        composant2 = "CONST_" + composant2
+                        adresse2 = hist_memoire[int(num_instruction)][composant2]
+            # print(variables.getDict())
+            # print(num_instruction)
+            # print(hist_memoire[int(num_instruction)])
+                script, position = g4.comparaison(adresse1, adresse2, position)
+                output_file.write(script)
+
+
+
         # s'il s'agit d'un trivial, on va l'écrire dans le fichier output
-        elif line.rstrip().split("\t")[5] == "MTdV" and line.rstrip().split("\t")[3] == "trivial":
+        elif type_instruction == "MTdV" and type_token == "trivial":
             # on récupère le caractère trivial
             trivial = line.rstrip().split("\t")[2]
             # on l'écrit dans le fichier output 
             # le output prend le nom du fichier en input mais avec l'extension .TS
-            output_file.write(trivial + "\n")
+            output_file.write("\n" + trivial + "\n")
             
 
         # s'il ne s'agit pas d'une affectation, pas de modification au niveau du gestionnaire de noms de variable
         else:
             pass  # peut-être qu'un autre groupe veut faire quelque chose ?
+
+        
 
     output_file.close()
 
@@ -245,22 +346,22 @@ if __name__ == "__main__":
     # informations sur les affectations
     # pour faciliter le travail de lecture du TSV
     affectations = affectations_variables(fichier_tsv)
-    print("affectations")
-    pprint(affectations)
+    # print("affectations")
+    # pprint(affectations)
     
     # 'suppressions' est un dictionnaire avec toutes les
     # informations sur les suppressions de variable
     # pour faciliter le travail de lecture du TSV
     suppressions = suppression_variables(fichier_tsv)
-    print("suppressions")
-    pprint(suppressions)
+    # print("suppressions")
+    # pprint(suppressions)
     
     # 'triviaux' est un dictionnaire avec toutes les
     # informations sur les caractères triviaux
     # pour faciliter le travail de lecture du TSV
     triviaux = afficher_triviaux(fichier_tsv)
-    print("triviaux")
-    pprint(triviaux)
+    # print("triviaux")
+    # pprint(triviaux)
     
     # historique de la mémoire
     hist_memoire = etatMemoire(affectations, suppressions)
@@ -269,7 +370,7 @@ if __name__ == "__main__":
     adresse_memoire_vive = adresse_memoire_vive(hist_memoire)
 
     # là ou tout se passe
-    lectureTSV(fichier_tsv, affectations, suppressions, variables, hist_memoire)
+    lectureTSV(fichier_tsv, affectations, suppressions, variables, hist_memoire, adresse_memoire_vive)
 
     # nous avons un module pour effacer complètement
     # ce qu'il y a dans le gestionnaire de noms de variable
