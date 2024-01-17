@@ -294,7 +294,7 @@ def lectureTSV(tsv: list, affectations: dict, suppressions: dict, variables: Ges
                         variables.deleteVariable(nom_variable)
                         
                         # print("pour instruction", num_instruction, ", le gestionnaire de noms de variable est:")
-                        variables.printVariables()
+                        # variables.printVariables()
                     
                     # maitenant que la suppression a été gérer par groupe 2 et 3, c'est bon !
                     # on peut supprimer l'entrée dans le dictionnaire de suppressions
@@ -401,6 +401,3 @@ if __name__ == "__main__":
     # ce qu'il y a dans le gestionnaire de noms de variable
     # comme cela se ferait à la fin d'une compilation
     variables.effacementGestionnaire()
-
-    # on vérifie que tout à bien été effacé
-    variables.printVariables()
