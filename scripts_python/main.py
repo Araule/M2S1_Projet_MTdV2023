@@ -19,7 +19,7 @@ from collections import defaultdict
 from groupe2_gestionVariables import GestionnaireVariables
 from groupe3_gestionMemoire import etatMemoire
 from groupe3_gestionMemoire import adresse_memoire_vive
-import scripts.groupe4_generationScriptMTdV as g4
+import groupe4_generationScriptMTdV as g4
 
 def getTSV(path: str) -> List[str]:
     """verifie que le chemin est correcte
