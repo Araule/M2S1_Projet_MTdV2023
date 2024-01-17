@@ -39,7 +39,7 @@ y : adresse 128
 
 ### groupe3_gestionMemoire.py 
 Le script principal, il prend en entrée un dictionnaire d'affectation (et de suppression) : 'input_affectations' (qui nous est fourni par le groupe 2). 
-On simule l'évolution de la mémoire à chaque instruction en enregistrant les variables et constantes pour ensuite renvoyer un dictionnaire renvoyant l'état de la mémoire à chaque instruction. 
+On simule l'évolution de la mémoire à chaque instruction, on lit une première fois le dictionnaire pour mettre en mémoire les constantes et on le fait une seconde fois pour enregistrer les variables. Cela nous permet par la suite de renvoyer un dictionnaire avec l'état de la mémoire. 
 Tout d'abord, on initialise la mémoire , pour ensuite dans la boucle principale itérer sur chaque instruction du programme et ainsi faire le traitement approprié. On enregistre ensuite l'état de la mémoire dans le dictionnaire avec l'indice correspondant à chaque étape. Et on retourne mémoire qui représente l'état de la mémoire à chaque étape du programme. 
 
 ### memory_manager.py 
