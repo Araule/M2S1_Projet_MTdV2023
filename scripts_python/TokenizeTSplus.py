@@ -36,7 +36,7 @@ def clean_lines(text: str):
 		# Ajout d'espaces autour de certains caractères
 		line = regex.sub("}", " }", line)
 		line = regex.sub("si\(", "si ( ", line) # si la parenthèse du si est collée
-		line = regex.sub("[^=]=[^=]", " = ", line)
+		line = regex.sub("(?<=[^=])=(?=[^=])", " = ", line)
 		line = regex.sub("==", " == ", line)
 		line = regex.sub("\*", " * ", line)
 		line = regex.sub("\+", " + ", line)
