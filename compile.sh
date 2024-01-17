@@ -15,15 +15,17 @@ if [ ! -f "$TSP" ]; then
     exit 1
 fi
 
-python3 scripts_python/groupe1_analyseurSyntaxique.py "$TSP"
+# changer l'extension de TSP en .tsv et le ranger dans la variable TSV.
+TSV=TSV/$(basename "$TSP" | sed 's/\.[^.]*$/.tsv/')
+
+
+python3 scripts_python/groupe1_analyseurSyntaxique.py "$TSP" "$TSV"
 
 # Check the exit status of script1.py
 if [ $? -eq 1 ]; then
     exit 1
 fi
 
-# changer l'extension de TSP en .tsv et le ranger dans la variable TSV.
-TSV=$(echo "$TSP" | sed 's/\.[^.]*$/.tsv/')
 
 python3 scripts_python/main.py $TSV
 
