@@ -107,28 +107,36 @@ def comparaison(adresse_variable1, adresse_variable2, pos) :
         # on bouge autant de fois qu'il faut pour se deplacer à la variable 1 et génération du code équivalent.
         code_mdtv += instr * to_variable1
         pos += delta * to_variable1
+    
+    #pour définir les directions entre les variables
+    if adresse_variable1 < adresse_variable2 : 
+    	v1_to_v2 = "D "
+    	v2_to_v1 = "G "
+    else:
+    	v1_to_v2 = "G "
+    	v2_to_v1 = "D "
 
     code_mdtv += "\nboucle"
     code_mdtv += "\n % on se place sur le supposé premier baton de la variable 1"
     code_mdtv += "\n D"
     code_mdtv += "\n % on vérifie que c'est bien un baton, si c'est le cas on va au niveau de la position équivalente à v1 de v2"
-    code_mdtv += "\n si(1) " + "D "*distance_ad1_ad2
+    code_mdtv += "\n si(1) " + v1_to_v2*distance_ad1_ad2
     code_mdtv += "\n  % si c'est différent de v1, on retourne sur l'adresse de v1"
     code_mdtv += "\n  si(0)"
-    code_mdtv += "\n   " + "G "*distance_ad1_ad2
+    code_mdtv += "\n   " + v2_to_v1*distance_ad1_ad2
     code_mdtv += "\n   boucle G si(0) fin } }"
     code_mdtv += "\n  }"
-    code_mdtv += "\n  " + "G "*distance_ad1_ad2
+    code_mdtv += "\n  " + v2_to_v1*distance_ad1_ad2
     code_mdtv += "\n }"
     code_mdtv += "\n % on arrive à la fin de la variable 1"
-    code_mdtv += "\n si(0) " + "D "*distance_ad1_ad2
+    code_mdtv += "\n si(0) " + v1_to_v2*distance_ad1_ad2
     code_mdtv += "\n % si v2 est différent, on retourne à l'adresse de v1"
     code_mdtv += "\n  si(1)"
-    code_mdtv += "\n   " + "G "*distance_ad1_ad2
+    code_mdtv += "\n   " + v2_to_v1*distance_ad1_ad2
     code_mdtv += "\n   boucle G si(0) fin } }"
     code_mdtv += "\n  }"
     code_mdtv += "\n  % si v1==v2 alors on se place sur le premier baton de v1"
-    code_mdtv += "\n  " + "G "*distance_ad1_ad2
+    code_mdtv += "\n  " + v2_to_v1*distance_ad1_ad2
     code_mdtv += "\n  boucle G si(0) fin } }"
     code_mdtv += "\n  D"
     code_mdtv += "\n }"
